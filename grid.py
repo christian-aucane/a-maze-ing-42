@@ -1,35 +1,50 @@
 from typing import TypedDict
+from enum import Enum
 
 
 class Direction(Enum):
-    NORTH = (0, +1)
-    SOUTH = (0, -1)
-    EAST = (1, 0)
+    NORTH = (0, -1)
+    EAST = (+1, 0)
+    SOUTH = (0, +1)
     WEST = (-1, 0)
 
 
 class BoxWalls(TypedDict):
     Direction.NORTH: bool
-    Direction.SOUTH: bool
     Direction.EAST: bool
+    Direction.SOUTH: bool
     Direction.WEST: bool
 
 
 class Box:
     @staticmethod
-    def _generate_walls():
+    def _generate_walls() -> dict[Direction, bool]:
         return {
             Direction.NORTH: True,
-            Direction.SOUTH: True,
             Direction.EAST: True,
+            Direction.SOUTH: True,
             Direction.WEST: True,
         }
 
-    def __init__(self, x: int, y: int):
+    def _get_bin(self) -> str:
+        bin_lst = [f"{int(self.walls[dir])}" for dir in list(Direction)]
+        return "".join(bin_lst)
+
+    def _get_hexa(self) -> str:
+        hex_values = "0123456789ABCDEF"
+        return hex_values[int(self._get_bin(), 2)]
+
+    def __init__(self, x: int, y: int) -> None:
         self.x = x
         self.y = y
         self.is_visited = False
         self.walls = self._generate_walls()
+
+    def __str__(self) -> str:
+        return f"Box(x={self.x}, y={self.y}, walls_bin={self._get_bin()})"
+
+    def get_output(self) -> str:
+        return self._get_hexa()
 
     def break_wall(self, direction: Direction):
         self.walls[direction] = False
@@ -63,7 +78,8 @@ class Grid:
         except GridError:
             return None
 
-    def _get_oposite_direction(self, direction: Direction) -> Direction:
+    @staticmethod
+    def _get_oposite_direction(direction: Direction) -> Direction:
         return {
             Direction.NORTH: Direction.SOUTH,
             Direction.SOUTH: Direction.NORTH,
@@ -79,6 +95,12 @@ class Grid:
         self.height = height
         self.grid = self._generate_grid()
 
+    def get_output(self) -> str:
+        output_lst = [
+            "".join(map(lambda box: box.get_output(), row)) for row in self.grid
+        ]
+        return "\n".join(output_lst)
+
     def get_box(self, x: int, y: int) -> Box:
         if self._is_bounded(x, y):
             return self.grid[y][x]
@@ -91,6 +113,20 @@ class Grid:
         neighbour = self._get_neighbour(box, direction)
         if neighbour is not None:
             box.break_wall(direction)
-            neighbour.break_wall(self._get_oposite_direction())
+            neighbour.break_wall(self._get_oposite_direction(direction))
             return True
         return False
+
+
+if __name__ == "__main__":
+    grid = Grid(10, 10)
+    start = grid.get_box(4, 4)
+    print(f"grid before :\n{grid.get_output()}")
+    for direction in Direction:
+        print(
+            f"DEBUG: grid.break_wall({start}, {direction}) -> {
+                grid.break_wall(start, direction)
+            }"
+        )
+    print(start)
+    print(f"grid after:\n{grid.get_output()}")
