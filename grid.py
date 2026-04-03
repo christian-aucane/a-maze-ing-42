@@ -1,4 +1,3 @@
-from typing import TypedDict
 from enum import Enum
 
 
@@ -9,14 +8,11 @@ class Direction(Enum):
     WEST = (-1, 0)
 
 
-class BoxWalls(TypedDict):
-    Direction.NORTH: bool
-    Direction.EAST: bool
-    Direction.SOUTH: bool
-    Direction.WEST: bool
+class OnFtPatternError(Exception):
+    pass
 
 
-class Box:
+class MazeBox:
     @staticmethod
     def _generate_walls() -> dict[Direction, bool]:
         return {
@@ -34,9 +30,10 @@ class Box:
         hex_values = "0123456789ABCDEF"
         return hex_values[int(self._get_bin(), 2)]
 
-    def __init__(self, x: int, y: int) -> None:
+    def __init__(self, x: int, y: int, is_on_ft_pattern: bool = False) -> None:
         self.x = x
         self.y = y
+        self.is_on_ft_pattern = is_on_ft_pattern
         self.is_visited = False
         self.walls = self._generate_walls()
 
@@ -46,36 +43,81 @@ class Box:
     def get_output(self) -> str:
         return self._get_hexa()
 
-    def break_wall(self, direction: Direction):
+    def print_debug(self):
+        # return "X" if all(self.walls.values()) else "."
+        return "X" if self.is_on_ft_pattern else "."
+
+    def break_wall(self, direction: Direction) -> None:
         self.walls[direction] = False
 
-    def is_wall(self, direction: Direction):
+    def is_wall(self, direction: Direction) -> bool:
         return self.walls[direction]
 
-    def get_neighbour_pos(self, direction: Direction):
+    def get_neighbour_pos(self, direction: Direction) -> tuple[int, int]:
         dx, dy = direction.value
         return (self.x + dx, self.y + dy)
 
-    def get_open_directions(self, box: "Box", previous_direction: Direction):
-        return tuple(dir for dir, wall in self.walls.items() if not wall)
+    def get_open_directions(
+        self, previous_direction: Direction
+    ) -> tuple[Direction, ...]:
+        return tuple(
+            dir
+            for dir, wall in self.walls.items()
+            if not wall and dir is not previous_direction
+        )
 
 
-class GridError(Exception):
+class OutOfBoundError(Exception):
     pass
 
 
-class Grid:
-    def _generate_grid(self) -> list[list[Box]]:
+FT_PATTERN = ["X   XXX", "X     X", "XXX XXX", "  X X  ", "  X XXX"]
+
+
+class MazeGrid:
+    def _is_on_ft_pattern(self, x, y):
+        x_correction = int(self.width % 2 == 1)
+        y_correction = int(self.height % 2 == 1)
+        border_width = (self.width - 7 - x_correction) // 2
+        border_height = (self.height - 6 - y_correction) // 2
+        x_in_pattern = border_width < x < self.width - border_width - x_correction
+        y_in_pattern = border_height < y < self.height - border_height - y_correction
+        if x_in_pattern and y_in_pattern:
+            x_pattern = x - border_width - 1
+            y_pattern = y - border_height - 1
+            if FT_PATTERN[y_pattern][x_pattern] == "X":
+                return True
+        return False
+
+    def _generate_grid(self) -> list[list[MazeBox]]:
         grid = []
+        skip_pattern = self.width < 9 or self.height < 7
+        if skip_pattern:
+            print(
+                f"The size (width={self.width}, height={
+                    self.height
+                }) do not permite to draw '42' pattern in the maze!\nMinimum width required = 9, Mimimum height required = 7"
+            )
         for y in range(self.height):
-            grid.append([Box(x, y) for x in range(self.width)])
+            grid.append(
+                [
+                    MazeBox(
+                        x=x,
+                        y=y,
+                        is_on_ft_pattern=(
+                            self._is_on_ft_pattern(x, y) if not skip_pattern else False
+                        ),
+                    )
+                    for x in range(self.width)
+                ]
+            )
         return grid
 
-    def _get_neighbour(self, box: Box, direction: Direction) -> Box | None:
+    def _get_neighbour(self, box: MazeBox, direction: Direction) -> MazeBox | None:
         x, y = box.get_neighbour_pos(direction)
         try:
             return self.get_box(x, y)
-        except GridError:
+        except OutOfBoundError:
             return None
 
     @staticmethod
@@ -101,32 +143,36 @@ class Grid:
         ]
         return "\n".join(output_lst)
 
-    def get_box(self, x: int, y: int) -> Box:
+    def print_debug(self) -> str:
+        output_lst = [
+            "".join(map(lambda box: box.print_debug(), row)) for row in self.grid
+        ]
+        return "\n".join(output_lst)
+
+    def get_box(self, x: int, y: int) -> MazeBox:
         if self._is_bounded(x, y):
             return self.grid[y][x]
-        raise GridError(f"Grid error at (x={x}, y={y}): Box is out of bound")
+        raise OutOfBoundError(f"Grid error at (x={x}, y={y}): Box is out of bound")
 
-    def get_boxes(self) -> list[Box]:
+    # TODO: use generator instead of list comprehension?
+    def get_boxes(self) -> list[MazeBox]:
         return [box for row in self.grid for box in row]
 
-    def break_wall(self, box: Box, direction: Direction) -> bool:
+    def break_wall(self, box: MazeBox, direction: Direction) -> bool:
         neighbour = self._get_neighbour(box, direction)
-        if neighbour is not None:
-            box.break_wall(direction)
-            neighbour.break_wall(self._get_oposite_direction(direction))
-            return True
-        return False
+        if neighbour is None:
+            return False
+        if box.is_on_ft_pattern or neighbour.is_on_ft_pattern:
+            return False
+        box.break_wall(direction)
+        neighbour.break_wall(self._get_oposite_direction(direction))
+        return True
 
 
 if __name__ == "__main__":
-    grid = Grid(10, 10)
-    start = grid.get_box(4, 4)
-    print(f"grid before :\n{grid.get_output()}")
-    for direction in Direction:
-        print(
-            f"DEBUG: grid.break_wall({start}, {direction}) -> {
-                grid.break_wall(start, direction)
-            }"
-        )
-    print(start)
-    print(f"grid after:\n{grid.get_output()}")
+    grid = MazeGrid(5, 7)
+    print(f"grid before:\n{grid.print_debug()}")
+    for box in grid.get_boxes():
+        for dir in Direction:
+            grid.break_wall(box, dir)
+    print(f"grid after:\n{grid.print_debug()}")
