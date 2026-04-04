@@ -44,7 +44,13 @@ Each team member must clearly indicate their contributions.
 -
 
 ### caucane
-
+- Initial project setup
+- Repository structure (modules: grid, generator, solver, render, parser, main)
+- Makefile implementation (venv, install, run, lint)
+- CI setup (lint workflow)
+- Config system (config.txt.example)
+- Entry point implementation (a_maze_ing.py + main.run)
+- Linting setup (flake8, mypy)
 -
 
 > This section must be updated throughout the project to reflect actual contributions.
