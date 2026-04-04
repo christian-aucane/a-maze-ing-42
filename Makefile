@@ -50,5 +50,5 @@ lint:
 # Strict linting (optional)
 # -------------------------------
 lint-strict:
-	$(PYTHON) -m flake8 . --strict
+	$(PYTHON) -m flake8 .
 	$(PYTHON) -m mypy . --strict
