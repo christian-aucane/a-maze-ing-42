@@ -1,0 +1,3 @@
+class MazeGrid:
+    # Ready to merge on an other branch
+    ...

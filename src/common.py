@@ -1,0 +1,3 @@
+class Direction:
+    # Ready to merge on an other branch
+    ...
