@@ -4,14 +4,28 @@ from .solver import solve_maze
 
 
 def run(config_file_path: str) -> int:
-    if config := parse_config_file(config_file_path=config_file_path) is None:
+    # Parse configuration
+    config = parse_config_file(config_file_path=config_file_path)
+    if config is None:
+        print("Error: failed to parse config file.")
         return 1
-    if maze := generate_maze(config=config) is None:
+
+    # Generate maze
+    maze = generate_maze(config=config)
+    if maze is None:
+        print("Error: failed to generate maze.")
         return 1
-    if solution := solve_maze(maze=maze) is None:
+
+    # Solve maze
+    solution = solve_maze(maze=maze)
+    if solution is None:
+        print("Error: failed to solve maze.")
         return 1
+
+    # Print for debug
     print(f"CONFIG:\n{config}\n")
     print(f"MAZE:\n{maze}\n")
-    print(f"SOLUTION:\n{solution}")
-    # TODO: write output file, and run UI (gui or cli)
+    print(f"SOLUTION:\n{solution}\n")
+
+    # TODO: write output file, run UI (cli or gui)
     return 0
