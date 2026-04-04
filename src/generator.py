@@ -1,0 +1,26 @@
+from .grid import MazeGrid
+from .common import Config
+
+
+class MazeGenerator:
+    # TODO: separer l'algo et faire de la composition ?
+    def __init__(self, algo: str):
+        self._algo = algo
+
+    def generate_maze(
+        self, grid: MazeGrid, start: tuple[int, int], end: tuple[int, int]
+    ) -> bool:
+        return True
+
+
+def generate_maze(config: Config) -> MazeGrid | None:
+    grid = MazeGrid(width=config.width, height=config.height)
+    generator = MazeGenerator(algo=config.gen_algo)
+    if not generator.generate_maze(
+        grid=grid,
+        start=config.start,
+        end=config.end
+    ):
+        print("Error during maze generation...")
+        return None
+    return grid
