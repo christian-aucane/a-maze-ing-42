@@ -1,0 +1,21 @@
+# Default configuration for A-Maze-ing
+# Lines starting with # are comments and ignored
+
+# Maze dimensions
+WIDTH=20
+HEIGHT=15
+
+# Entry and exit points
+ENTRY=0,0
+EXIT=19,14
+
+# Output file
+OUTPUT_FILE=maze.txt
+
+# Perfect maze? True = no loops, False = allow loops
+PERFECT=True
+
+# Optional additional parameters
+SEED=42
+ALGORITHM=dfs
+DISPLAY_MODE=cli  # options: cli, gui
