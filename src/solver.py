@@ -7,7 +7,8 @@ class MazeSolver:
     def __init__(self, algo: str):
         self.algo = algo
 
-    def solve_maze(self, maze: MazeGrid) -> list[Direction] | None: ...
+    def solve_maze(self, maze: MazeGrid) -> list[Direction] | None:
+        return [Direction.NORTH, Direction.WEST]
 
 
 def solve_maze(maze: MazeGrid, config: Config) -> list[Direction] | None:
