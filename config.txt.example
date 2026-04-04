@@ -17,5 +17,6 @@ PERFECT=True
 
 # Optional additional parameters
 SEED=42
-ALGORITHM=dfs
+GEN_ALGORITHM=None
+SOLVE_ALGORITHM=None
 DISPLAY_MODE=cli  # options: cli, gui
