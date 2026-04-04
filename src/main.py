@@ -27,5 +27,6 @@ def run(config_file_path: str) -> int:
     print(f"MAZE:\n{maze}\n")
     print(f"SOLUTION:\n{solution}\n")
 
-    # TODO: write output file, run UI (cli or gui) (move all in ui ? can restart ...etc )
+    # TODO: write output file, run UI (cli or gui)
+    # (move all in ui ? can restart ...etc )
     return 0
