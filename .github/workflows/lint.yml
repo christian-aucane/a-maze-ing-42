@@ -1,0 +1,20 @@
+name: Lint Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install project
+        run: make install
+      - name: Run lint strict
+        run: make lint-strict
