@@ -1,6 +1,6 @@
 from .grid import MazeGrid
 from .commom import Direction
-from .config import Config
+from .common import Config
 
 
 class MazeSolver:
@@ -13,6 +13,7 @@ class MazeSolver:
 
 def solve_maze(maze: MazeGrid, config: Config) -> list[Direction] | None:
     solver = MazeSolver(algo=config.solve_algo)
-    if solution := solver.solve_maze(maze) is None:
+    solution = solver.solve_maze(maze)
+    if solution is None:
         print("No solution found...")
     return solution

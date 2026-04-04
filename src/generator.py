@@ -8,10 +8,9 @@ class MazeGenerator:
         self._algo = algo
 
     def generate_maze(
-        grid: MazeGrid, start: tuple[int, int], end: tuple[int, int]
-    ) -> bool: ...
-
-    ...
+        self, grid: MazeGrid, start: tuple[int, int], end: tuple[int, int]
+    ) -> bool:
+        return True
 
 
 def generate_maze(config: Config) -> MazeGrid | None:

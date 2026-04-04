@@ -17,7 +17,7 @@ def run(config_file_path: str) -> int:
         return 1
 
     # Solve maze
-    solution = solve_maze(maze=maze)
+    solution = solve_maze(maze=maze, config=config)
     if solution is None:
         print("Error: failed to solve maze.")
         return 1
