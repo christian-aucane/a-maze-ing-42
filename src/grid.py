@@ -91,9 +91,9 @@ class MazeGrid:
         skip_pattern = self.width < 9 or self.height < 7
         if skip_pattern:
             print(
-                f"The size (width={self.width}, height={
-                    self.height
-                }) do not permite to draw '42' pattern in the maze!\n"
+                f"The size (width={self.width}, "
+                f"height={self.height}) "
+                "do not permite to draw '42' pattern in the maze!\n"
                 "Minimum width required = 9, Mimimum height required = 7"
             )
         for y in range(self.height):
