@@ -16,7 +16,11 @@ class MazeGenerator:
 def generate_maze(config: Config) -> MazeGrid | None:
     grid = MazeGrid(width=config.width, height=config.height)
     generator = MazeGenerator(algo=config.gen_algo)
-    if not generator.generate_maze(grid=grid, start=config.start, end=config.end):
+    if not generator.generate_maze(
+        grid=grid,
+        start=config.start,
+        end=config.end
+    ):
         print("Error during maze generation...")
         return None
     return grid
