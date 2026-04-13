@@ -1,5 +1,6 @@
 from .grid import MazeGrid
-from .common import Direction, Config
+from .common import Direction
+from .config import Config
 
 
 class MazeSolver:

@@ -1,5 +1,5 @@
 from .grid import MazeGrid
-from .common import Config
+from .config import Config
 
 
 class MazeGenerator:
