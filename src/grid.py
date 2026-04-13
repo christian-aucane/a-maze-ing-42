@@ -73,8 +73,12 @@ class MazeGrid:
         y_correction = int(self.height % 2 == 1)
         border_width = (self.width - 7 - x_correction) // 2
         border_height = (self.height - 6 - y_correction) // 2
-        x_in_pattern = border_width < x < self.width - border_width - x_correction
-        y_in_pattern = border_height < y < self.height - border_height - y_correction
+        x_in_pattern = (
+            border_width < x < self.width - border_width - x_correction
+        )
+        y_in_pattern = (
+            border_height < y < self.height - border_height - y_correction
+        )
         if x_in_pattern and y_in_pattern:
             x_pattern = x - border_width - 1
             y_pattern = y - border_height - 1
@@ -89,7 +93,8 @@ class MazeGrid:
             print(
                 f"The size (width={self.width}, height={
                     self.height
-                }) do not permite to draw '42' pattern in the maze!\nMinimum width required = 9, Mimimum height required = 7"
+                }) do not permite to draw '42' pattern in the maze!\n"
+                "Minimum width required = 9, Mimimum height required = 7"
             )
         for y in range(self.height):
             grid.append(
@@ -98,7 +103,8 @@ class MazeGrid:
                         x=x,
                         y=y,
                         is_on_ft_pattern=(
-                            self._is_on_ft_pattern(x, y) if not skip_pattern else False
+                            self._is_on_ft_pattern(x, y)
+                            if not skip_pattern else False
                         ),
                     )
                     for x in range(self.width)
@@ -106,7 +112,11 @@ class MazeGrid:
             )
         return grid
 
-    def _get_neighbour(self, box: MazeBox, direction: Direction) -> MazeBox | None:
+    def _get_neighbour(
+        self,
+        box: MazeBox,
+        direction: Direction
+    ) -> MazeBox | None:
         x, y = box.get_neighbour_pos(direction)
         try:
             return self.get_box(x, y)
@@ -132,7 +142,8 @@ class MazeGrid:
 
     def get_output(self) -> str:
         output_lst = [
-            "".join(map(lambda box: box.get_output(), row)) for row in self.grid
+            "".join(map(lambda box: box.get_output(), row))
+            for row in self.grid
         ]
         return "\n".join(output_lst)
 
@@ -145,7 +156,9 @@ class MazeGrid:
     def get_box(self, x: int, y: int) -> MazeBox:
         if self._is_bounded(x, y):
             return self.grid[y][x]
-        raise OutOfBoundError(f"Grid error at (x={x}, y={y}): Box is out of bound")
+        raise OutOfBoundError(
+            f"Grid error at (x={x}, y={y}): Box is out of bound"
+        )
 
     # TODO: use generator instead of list comprehension?
     def get_boxes(self) -> list[MazeBox]:
