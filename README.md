@@ -1,9 +1,50 @@
 *This activity has been created as part of
 the 42 curriculum by osamet, caucane.*
-# a-maze-ing-42
 
-## 🔀 Pull Request Template
+# A_maze_ing
 
+## 🔀 Pull Request & Workflow
+Follow these steps when working on a feature and creating a Pull Request.
+
+### 📌 Branch Naming
+
+- Name branches according to the **objective** and your **login**:
+```
+<branch-objective>-login42
+```
+- Examples:
+  - `init-repo-caucane`
+  - `update-readme-caucane`
+  - `generator-osamet`
+- One branch = one goal / one PR
+
+---
+### 📌 Before creating the PR (important)
+
+Make sure your branch is up to date with `main`:
+
+```bash
+git checkout <your-branch>
+git fetch origin
+git rebase origin/main
+```
+
+If there are conflicts:
+- Resolve them manually
+- Then continue the rebase:
+```bash
+git add .
+git rebase --continue
+```
+
+Finally, push your branch:
+```bash
+git push origin <your-branch> --force
+```
+
+---
+
+### 🔀 Pull Request Template
 Use the following template when creating a Pull Request:
 
 ```
@@ -34,6 +75,32 @@ Briefly describe what this PR does.
 ```
 
 ---
+
+### 🔁 Merge process (after PR is approved)
+
+Once the PR is approved and CI passes:
+
+1. Ensure the branch is still up to date:
+```bash
+git checkout <your-branch>
+git fetch origin
+git rebase origin/main
+git push origin <your-branch> --force
+```
+
+2. Merge on GitHub using:
+- ✅ **Squash and merge**
+
+3. Delete the branch after merge (recommended)
+
+---
+
+### ⚠️ Rules
+
+- ❌ Do not push directly to `main`
+- ❌ Do not merge without PR
+- ✅ Always rebase before PR and before merge
+- ✅ Keep commits clean and meaningful
 
 ## 👥 Work Distribution
 
