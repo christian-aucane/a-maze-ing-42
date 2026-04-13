@@ -15,12 +15,12 @@ class GenerationAlgorithm(ABC):
 class MazeGenerator:
     # TODO: separer l'algo et faire de la composition ?
     def __init__(self, algo: GenerationAlgorithm):
-        self._algo = algo
+        self.algo = algo
 
     def generate_maze(
         self, grid: MazeGrid, start: tuple[int, int], end: tuple[int, int]
     ) -> bool:
-        return True
+        return self.algo.run()
 
 
 def generate_maze(config: Config) -> MazeGrid | None:
