@@ -40,7 +40,7 @@ class MazeBox:
     def get_output(self) -> str:
         return self._get_hexa()
 
-    def get_debug(self):
+    def get_debug(self) -> str:
         return "X" if all(self.walls.values()) else "."
         # return self._get_hexa()
 
@@ -68,7 +68,7 @@ FT_PATTERN = ["X   XXX", "X     X", "XXX XXX", "  X X  ", "  X XXX"]
 
 
 class MazeGrid:
-    def _is_on_ft_pattern(self, x, y):
+    def _is_on_ft_pattern(self, x: int, y: int) -> bool:
         x_correction = int(self.width % 2 == 1)
         y_correction = int(self.height % 2 == 1)
         border_width = (self.width - 7 - x_correction) // 2
@@ -155,7 +155,6 @@ class MazeGrid:
         neighbour = self._get_neighbour(box, direction)
         if neighbour is None:
             return False
-        # TODO: separer la logique du patern dans le generateur ?
         if box.is_on_ft_pattern or neighbour.is_on_ft_pattern:
             return False
         box.break_wall(direction)
