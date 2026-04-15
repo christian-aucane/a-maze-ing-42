@@ -1,5 +1,5 @@
 from .config import parse_config_file
-from .generator import generate_maze
+from .generator.maze_generator import generate_maze
 from .solver import solve_maze
 
 

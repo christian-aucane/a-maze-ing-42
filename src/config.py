@@ -1,10 +1,10 @@
 """Parse config."""
+
 from typing import Any
 from pydantic import BaseModel, Field, field_validator
 
 
 class Config(BaseModel):
-    # TODO: use Field for config validation
     width: int = Field(...)
     height: int = Field(...)
     entry: tuple[int, int] = Field(...)
@@ -16,7 +16,7 @@ class Config(BaseModel):
     solve_algorithm: str = Field(default="DFS")
     display_mode: str = Field(default="...")
 
-    @field_validator('entry', 'exit', mode="before")
+    @field_validator("entry", "exit", mode="before")
     @classmethod
     def entry_exit(cls, value: str) -> tuple[int, int]:
         x, y = map(int, value.split(","))
