@@ -5,8 +5,6 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class Config(BaseModel):
-    # TODO: use Field for config validation
-
     width: int = Field(...)
     height: int = Field(...)
     entry: tuple[int, int] = Field(...)
@@ -31,9 +29,8 @@ def parse_config_file(config_file_path: str) -> Config | None:
     try:
         with open(config_file_path, "r") as f:
             if not f:
-                raise FileNotFoundError(
-                    f"Config file '{config_file_path}' doesn't exist..."
-                )
+                raise FileNotFoundError(f"Config file '{config_file_path}'"
+                                        " doesn't exist...")
             for line in f:
                 line = line.strip()
                 if not line or line.startswith("#"):
