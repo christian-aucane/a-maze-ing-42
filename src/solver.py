@@ -13,7 +13,7 @@ class MazeSolver:
 
 
 def solve_maze(maze: MazeGrid, config: Config) -> list[Direction] | None:
-    solver = MazeSolver(algo=config.solve_algo)
+    solver = MazeSolver(algo=config.solve_algorithm)
     solution = solver.solve_maze(maze)
     if solution is None:
         print("No solution found...")
