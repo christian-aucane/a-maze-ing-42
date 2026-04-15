@@ -1,4 +1,5 @@
 """Parse config."""
+from typing import Any
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -11,20 +12,20 @@ class Config(BaseModel):
     perfect: bool = Field(...)
     output_file: str = Field(...)
     seed: int | None = Field(default=None)
-    gen_algorithm: str | None = Field(default=None)
-    solve_algorithm: str | None = Field(default=None)
-    display_mode: str | None = Field(default=None)
+    gen_algorithm: str = Field(default="...")
+    solve_algorithm: str = Field(default="DFS")
+    display_mode: str = Field(default="...")
 
     @field_validator('entry', 'exit', mode="before")
     @classmethod
-    def entry_exit(cls, value) -> tuple:
-        value = tuple(map(int, str(value).split(",")))
-        return value
+    def entry_exit(cls, value: str) -> tuple[int, int]:
+        x, y = map(int, value.split(","))
+        return (x, y)
 
 
 def parse_config_file(config_file_path: str) -> Config | None:
     """Parse config data."""
-    config_dict: dict = {}
+    config_dict: dict[str, Any] = {}
     try:
         with open(config_file_path, "r") as f:
             if not f:
