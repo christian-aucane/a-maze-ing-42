@@ -104,7 +104,8 @@ class MazeGrid:
                         y=y,
                         is_on_ft_pattern=(
                             self._is_on_ft_pattern(x, y)
-                            if not skip_pattern else False
+                            if not skip_pattern
+                            else False
                         ),
                     )
                     for x in range(self.width)
@@ -112,16 +113,9 @@ class MazeGrid:
             )
         return grid
 
-    def _get_neighbour(
-        self,
-        box: MazeBox,
-        direction: Direction
-    ) -> MazeBox | None:
+    def get_neighbour(self, box: MazeBox, direction: Direction) -> MazeBox:
         x, y = box.get_neighbour_pos(direction)
-        try:
-            return self.get_box(x, y)
-        except OutOfBoundError:
-            return None
+        return self.get_box(x, y)
 
     @staticmethod
     def _get_oposite_direction(direction: Direction) -> Direction:
@@ -165,7 +159,7 @@ class MazeGrid:
         return [box for row in self.grid for box in row]
 
     def break_wall(self, box: MazeBox, direction: Direction) -> bool:
-        neighbour = self._get_neighbour(box, direction)
+        neighbour = self.get_neighbour(box, direction)
         if neighbour is None:
             return False
         if box.is_on_ft_pattern or neighbour.is_on_ft_pattern:

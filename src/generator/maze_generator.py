@@ -1,0 +1,81 @@
+from abc import ABC, abstractmethod
+from typing import Any, Optional
+
+from src.grid import MazeGrid
+from src.config import Config
+from .algorithms import GENERATION_ALGORITHMS_CLASSES
+
+
+class GenerationAlgorithm(ABC):
+    def __init__(self, is_perfect: bool, *args: Any, **kwargs: Any):
+        self.is_perfect = is_perfect
+
+    @abstractmethod
+    def run(
+        self, grid: MazeGrid, start: tuple[int, int], end: tuple[int, int]
+    ) -> bool: ...
+
+
+class MazeGenerator:
+    """
+    Algo sample
+    'dfs': {
+        'class': DfsAlgorithm,
+        'args': [args...],     # Optionnal
+        'kwargs': {kwargs...}  # Optionnal
+    """
+
+    ALGORITHMS = {"...": {"class": GenerationAlgorithm}}
+
+    # TODO: separer l'algo et faire de la composition ?
+    def __init__(self, algo_name: str):
+        try:
+            self.algo_class = GENERATION_ALGORITHMS_CLASSES[algo_name]
+        except KeyError:
+            raise ValueError(
+                "Invalid algorithm name ... Valid names: "
+                f"{GENERATION_ALGORITHMS_CLASSES.keys()}"
+            )
+
+    def generate_maze(
+        self,
+        size: tuple[int, int],
+        start: tuple[int, int],
+        end: tuple[int, int],
+        is_perfect: bool,
+    ) -> Optional[MazeGrid]:
+        grid = MazeGrid(*size)
+        algo = self.algo_class(
+            grid=grid, start=start, end=end, is_perfect=is_perfect
+        )
+        if algo.run():
+            return grid
+        return None
+
+
+def generate_maze(config: Config) -> MazeGrid | None:
+    try:
+        generator = MazeGenerator(algo_name=config.gen_algorithm)
+    except ValueError:
+        print("Error durring generator instanciation...")
+        return None
+
+    grid = generator.generate_maze(
+        size=(config.width, config.height),
+        start=config.entry,
+        end=config.exit,
+        is_perfect=config.perfect,
+    )
+    if grid is None:
+        print("Error durring maze generation...")
+        return None
+    return grid
+
+
+if __name__ == "__main__":
+    generator = MazeGenerator(algo_name="test")
+    maze = generator.generate_maze(
+        size=(15, 15), start=(0, 0), end=(14, 14), is_perfect=True
+    )
+    if maze is not None:
+        print(f"maze:\n{maze.get_debug()}")
