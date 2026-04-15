@@ -1,28 +1,48 @@
-from typing import Optional
-
-from pydantic import BaseModel
+"""Parse config."""
+from pydantic import BaseModel, Field, field_validator
 
 
 class Config(BaseModel):
     # TODO: use Field for config validation
-    solve_algo: str = "..."
-    gen_algo: str = "..."
-    width: int = 20
-    height: int = 20
-    start: tuple[int, int] = (0, 0)
-    end: tuple[int, int] = (19, 19)
+    width: int = Field(...)
+    height: int = Field(...)
+    entry: tuple[int, int] = Field(...)
+    exit: tuple[int, int] = Field(...)
+    perfect: bool = Field(...)
+    output_file: str = Field(...)
+    seed: int | None = Field(default=None)
+    gen_algorithm: str | None = Field(default=None)
+    solve_algorithm: str | None = Field(default=None)
+    display_mode: str | None = Field(default=None)
 
-    ...
-
-    @staticmethod
-    def read_file(path: str) -> Optional["Config"]:
-        # TODO: read file and instanciate a config or raise error
-        return Config()
-        ...
+    @field_validator('entry', 'exit', mode="before")
+    @classmethod
+    def entry_exit(cls, value) -> tuple:
+        value = tuple(map(int, str(value).split(",")))
+        return value
 
 
 def parse_config_file(config_file_path: str) -> Config | None:
-    config = Config.read_file(config_file_path)
-    if config is None:
-        print(f"Config file '{config_file_path}' doesn't exist...")
-    return config
+    """Parse config data."""
+    config_dict: dict = {}
+    try:
+        with open(config_file_path, "r") as f:
+            if not f:
+                raise FileNotFoundError(f"Config file '{config_file_path}'"
+                                        " doesn't exist...")
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                key, value = line.split("=")
+                config_dict[key.lower()] = value
+        config = Config(**config_dict)
+        print(config)
+        return config
+    except (FileNotFoundError, ValueError, KeyError) as e:
+        print(e)
+    return None
+
+
+if __name__ == "__main__":
+    parse_config_file("../config.txt")
