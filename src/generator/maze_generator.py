@@ -2,7 +2,6 @@ from typing import Optional
 
 from src.grid import MazeGrid
 from src.config import Config
-from .algorithms.abstract import GenerationAlgorithm
 from .algorithms import GENERATION_ALGORITHMS_CLASSES
 
 
@@ -12,7 +11,8 @@ class MazeGenerator:
             self.algo_class = GENERATION_ALGORITHMS_CLASSES[algo_name]
         except KeyError:
             raise ValueError(
-                f"Invalid algorithm name ... Valid names: {GENERATION_ALGORITHMS_CLASSES.keys()}"
+                "Invalid algorithm name ... Valid names: "
+                f"{GENERATION_ALGORITHMS_CLASSES.keys()}"
             )
 
     def generate_maze(
