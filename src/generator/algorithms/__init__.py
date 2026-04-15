@@ -7,4 +7,4 @@ Algo sample
 
 GENERATION_ALGORITHMS_CLASSES = {"test": TestGenerationAlgorithm}
 
-__all__ = ["TestGenerationAlgorithm"]
+__all__ = ["GENERATION_ALGORITHMS_CLASSES"]
