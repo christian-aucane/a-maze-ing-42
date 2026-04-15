@@ -54,15 +54,16 @@ class MazeGenerator:
 
 
 def generate_maze(config: Config) -> MazeGrid | None:
-    generator = MazeGenerator.get_generator(algo_name=config.gen_algo)
-    if generator is None:
+    try:
+        generator = MazeGenerator(algo_name=config.gen_algorithm)
+    except ValueError:
         print("Error durring generator instanciation...")
         return None
 
     grid = generator.generate_maze(
         size=(config.width, config.height),
-        start=config.start,
-        end=config.end,
+        start=config.entry,
+        end=config.exit,
         is_perfect=config.perfect,
     )
     if grid is None:
