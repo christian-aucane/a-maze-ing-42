@@ -11,6 +11,7 @@ class Config(BaseModel):
     height: int = 20
     start: tuple[int, int] = (0, 0)
     end: tuple[int, int] = (19, 19)
+    perfect: bool = True
 
     ...
 
