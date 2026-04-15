@@ -1,40 +1,33 @@
-from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Optional
 
 from src.grid import MazeGrid
 from src.config import Config
+from .algorithms.abstract import GenerationAlgorithm
+from .algorithms.test_algo import TestGenerationAlgorithm
+
+"""
+Algo sample
+'dfs': DfsAlgorithm
+"""
 
 
-class GenerationAlgorithm(ABC):
-    def __init__(self, is_perfect: bool, *args: Any, **kwargs: Any):
-        self.is_perfect = is_perfect
-
-    @abstractmethod
-    def run(
-        self, grid: MazeGrid, start: tuple[int, int], end: tuple[int, int]
-    ) -> bool: ...
+# TODO: deplacer dans common.py ??
+GENERATION_ALGORITHMS_CLASSES = {"test": TestGenerationAlgorithm}
 
 
 class MazeGenerator:
-    """
-    Algo sample
-    'dfs': {
-        'class': DfsAlgorithm,
-        'args': [args...],     # Optionnal
-        'kwargs': {kwargs...}  # Optionnal
-    """
-
-    ALGORITHMS = {"...": {"class": GenerationAlgorithm}}
-    # TODO: separer l'algo et faire de la composition ?
-
     def __init__(self, algo: GenerationAlgorithm):
         self.algo = algo
 
     def generate_maze(
-        self, size: tuple[int, int], start: tuple[int, int], end: tuple[int, int]
+        self,
+        size: tuple[int, int],
+        start: tuple[int, int],
+        end: tuple[int, int],
     ) -> Optional[MazeGrid]:
         grid = MazeGrid(*size)
-        if self.algo.run(grid=grid, start=start, end=end):
+        self.algo.configure(grid=grid, start=start, end=end)
+        if self.algo.run():
             return grid
         return None
 
@@ -43,11 +36,9 @@ class MazeGenerator:
         cls, algo_name: str, is_perfect: bool
     ) -> Optional["MazeGenerator"]:
         try:
-            algo_dict = cls.ALGORITHMS[algo_name]
-            algo = algo_dict["class"](
+            # TODO: ajouter late import de GENERATION_ALGORITHMS_CLASSES
+            algo = GENERATION_ALGORITHMS_CLASSES[algo_name](
                 is_perfect=is_perfect,
-                *algo_dict.get("args", []),
-                **algo_dict.get("kwargs", {}),
             )
             return cls(algo=algo)
         except KeyError:
@@ -69,3 +60,11 @@ def generate_maze(config: Config) -> MazeGrid | None:
         print("Error durring maze generation...")
         return None
     return grid
+
+
+if __name__ == "__main__":
+    generator = MazeGenerator.get_generator(algo_name="test", is_perfect=True)
+    print("DEBUG", generator)
+    maze = generator.generate_maze(size=(15, 15), start=(0, 0), end=(14, 14))
+    print(maze)
+    print(maze.get_debug())
