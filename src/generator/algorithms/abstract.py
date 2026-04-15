@@ -1,27 +1,23 @@
 from abc import ABC, abstractmethod
 
 from src.common import Direction
-from src.grid import MazeGrid, OutOfBoundError
+from src.grid import MazeBox, MazeGrid, OutOfBoundError
 
 
 class GenerationAlgorithm(ABC):
-    def __init__(self, is_perfect: bool):
-        self.is_perfect = is_perfect
-        self.is_configured = False
-        self.grid = None
-        self.start = None
-        self.end = None
-        self.current_box = None
-        self.movements = []
-
-    def configure(
-        self, grid: MazeGrid, start: tuple[int, int], end: tuple[int, int]
+    def __init__(
+        self,
+        grid: MazeGrid,
+        start: tuple[int, int],
+        end: tuple[int, int],
+        is_perfect: bool,
     ):
-        self.grid = grid  # TODO: utiliser une copie et retourner dans run la grille modifiee ??
+        self.grid = grid
         self.start = grid.get_box(*start)
         self.end = grid.get_box(*end)
         self.current_box = self.start
-        self.is_configured = True
+        self.is_perfect = is_perfect
+        self.movements: list[Direction] = []
 
     def _move(self, direction: Direction) -> bool:
         try:
@@ -38,6 +34,7 @@ class GenerationAlgorithm(ABC):
         for _ in range(n_moves):
             dir = self.movements[-1]
             self._move(dir)
+        return n_moves
 
     def break_and_move(self, direction: Direction) -> bool:
         if not self.grid.break_wall(box=self.current_box, direction=direction):

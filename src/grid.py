@@ -113,14 +113,9 @@ class MazeGrid:
             )
         return grid
 
-    def get_neighbour(
-        self, box: MazeBox, direction: Direction
-    ) -> MazeBox | None:
+    def get_neighbour(self, box: MazeBox, direction: Direction) -> MazeBox:
         x, y = box.get_neighbour_pos(direction)
-        try:
-            return self.get_box(x, y)
-        except OutOfBoundError:
-            return None
+        return self.get_box(x, y)
 
     @staticmethod
     def _get_oposite_direction(direction: Direction) -> Direction:
