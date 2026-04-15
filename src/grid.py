@@ -104,7 +104,8 @@ class MazeGrid:
                         y=y,
                         is_on_ft_pattern=(
                             self._is_on_ft_pattern(x, y)
-                            if not skip_pattern else False
+                            if not skip_pattern
+                            else False
                         ),
                     )
                     for x in range(self.width)
@@ -112,10 +113,8 @@ class MazeGrid:
             )
         return grid
 
-    def _get_neighbour(
-        self,
-        box: MazeBox,
-        direction: Direction
+    def get_neighbour(
+        self, box: MazeBox, direction: Direction
     ) -> MazeBox | None:
         x, y = box.get_neighbour_pos(direction)
         try:
@@ -142,8 +141,7 @@ class MazeGrid:
 
     def get_output(self) -> str:
         output_lst = [
-            "".join(map(lambda box: box.get_output(), row))
-            for row in self.grid
+            "".join(map(lambda box: box.get_output(), row)) for row in self.grid
         ]
         return "\n".join(output_lst)
 
@@ -165,7 +163,7 @@ class MazeGrid:
         return [box for row in self.grid for box in row]
 
     def break_wall(self, box: MazeBox, direction: Direction) -> bool:
-        neighbour = self._get_neighbour(box, direction)
+        neighbour = self.get_neighbour(box, direction)
         if neighbour is None:
             return False
         if box.is_on_ft_pattern or neighbour.is_on_ft_pattern:
