@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class Config(BaseModel):
     # TODO: use Field for config validation
     solve_algo: str = "..."
-    gen_algo: str = "..."
+    gen_algo: str = "test"
     width: int = 20
     height: int = 20
     start: tuple[int, int] = (0, 0)
