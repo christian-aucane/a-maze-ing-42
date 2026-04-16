@@ -50,6 +50,10 @@ class MazeBox:
     def is_wall(self, direction: Direction) -> bool:
         return self.walls[direction]
 
+    # -------------------
+    # Test problem
+    # -------------------
+
     def get_neighbour_pos(self, direction: Direction) -> tuple[int, int]:
         dx, dy = direction.value
         return (self.x + dx, self.y + dy)
@@ -72,7 +76,7 @@ class MazeGrid:
         x_correction = int(self.width % 2 == 1)
         y_correction = int(self.height % 2 == 1)
         border_width = (self.width - 7 - x_correction) // 2
-        border_height = (self.height - 6 - y_correction) // 2
+        border_height = (self.height - 5 - y_correction) // 2
         x_in_pattern = (
             border_width < x < self.width - border_width - x_correction
         )
@@ -113,6 +117,10 @@ class MazeGrid:
             )
         return grid
 
+    # -------------------
+    # Test problem
+    # -------------------
+
     def get_neighbour(self, box: MazeBox, direction: Direction) -> MazeBox:
         x, y = box.get_neighbour_pos(direction)
         return self.get_box(x, y)
@@ -125,6 +133,10 @@ class MazeGrid:
             Direction.EAST: Direction.WEST,
             Direction.WEST: Direction.EAST,
         }[direction]
+
+    # --------------------
+    # Probelem is bounded
+    # --------------------
 
     def _is_bounded(self, x: int, y: int) -> bool:
         return 0 <= x < self.width and 0 <= y < self.height
@@ -159,9 +171,12 @@ class MazeGrid:
         return [box for row in self.grid for box in row]
 
     def break_wall(self, box: MazeBox, direction: Direction) -> bool:
-        neighbour = self.get_neighbour(box, direction)
-        if neighbour is None:
+        try:
+            neighbour = self.get_neighbour(box, direction)
+        except OutOfBoundError:
             return False
+        # if neighbour is None:
+        #     return False
         if box.is_on_ft_pattern or neighbour.is_on_ft_pattern:
             return False
         box.break_wall(direction)
@@ -170,7 +185,7 @@ class MazeGrid:
 
 
 if __name__ == "__main__":
-    grid = MazeGrid(15, 15)
+    grid = MazeGrid(40, 15)
     print(f"grid before:\n{grid.get_debug()}")
     for box in grid.get_boxes():
         for dir in Direction:
