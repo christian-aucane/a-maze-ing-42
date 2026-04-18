@@ -38,7 +38,6 @@ def parse_config_file(config_file_path: str) -> Config | None:
                 key, value = line.split("=")
                 config_dict[key.lower()] = value
         config = Config(**config_dict)
-        print(config)
         return config
     except (FileNotFoundError, ValueError, KeyError) as e:
         print(e)

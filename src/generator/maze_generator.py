@@ -40,13 +40,13 @@ class MazeGenerator:
     def generate_maze(
         self,
         size: tuple[int, int],
-        start: tuple[int, int],
-        end: tuple[int, int],
+        entry: tuple[int, int],
+        exit: tuple[int, int],
         is_perfect: bool,
     ) -> Optional[MazeGrid]:
         grid = MazeGrid(*size)
         algo = self.algo_class(
-            grid=grid, start=start, end=end, is_perfect=is_perfect
+            grid=grid, entry=entry, exit=exit, is_perfect=is_perfect
         )
         if algo.run():
             return grid
@@ -75,7 +75,7 @@ def generate_maze(config: Config) -> MazeGrid | None:
 if __name__ == "__main__":
     generator = MazeGenerator(algo_name="test")
     maze = generator.generate_maze(
-        size=(15, 15), start=(0, 0), end=(14, 14), is_perfect=True
+        size=(40, 15), start=(0, 0), end=(14, 14), is_perfect=True
     )
     if maze is not None:
         print(f"maze:\n{maze.get_debug()}")

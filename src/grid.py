@@ -40,19 +40,24 @@ class MazeBox:
     def get_output(self) -> str:
         return self._get_hexa()
 
-    def get_debug(self) -> str:
-        return "X" if all(self.walls.values()) else "."
-        # return self._get_hexa()
+    def get_debug(self, direction: Direction,) -> str:
+        if direction == Direction.NORTH:
+            return "+--" if self.walls[Direction.NORTH] else "+  "
+        if direction == Direction.SOUTH:
+            return "+--"
+        if direction.name == "EAST":
+            return "|  " if self.walls[Direction.WEST] else "   "
+        return ""
 
     def break_wall(self, direction: Direction) -> None:
         self.walls[direction] = False
 
+    # -------------------
+    # is wall
+    # -------------------        
+
     def is_wall(self, direction: Direction) -> bool:
         return self.walls[direction]
-
-    # -------------------
-    # Test problem
-    # -------------------
 
     def get_neighbour_pos(self, direction: Direction) -> tuple[int, int]:
         dx, dy = direction.value
@@ -117,10 +122,6 @@ class MazeGrid:
             )
         return grid
 
-    # -------------------
-    # Test problem
-    # -------------------
-
     def get_neighbour(self, box: MazeBox, direction: Direction) -> MazeBox:
         x, y = box.get_neighbour_pos(direction)
         return self.get_box(x, y)
@@ -133,10 +134,6 @@ class MazeGrid:
             Direction.EAST: Direction.WEST,
             Direction.WEST: Direction.EAST,
         }[direction]
-
-    # --------------------
-    # Probelem is bounded
-    # --------------------
 
     def _is_bounded(self, x: int, y: int) -> bool:
         return 0 <= x < self.width and 0 <= y < self.height
@@ -153,11 +150,25 @@ class MazeGrid:
         ]
         return "\n".join(output_lst)
 
+    # -------------------
+    # afficher la Grid
+    # -------------------
+
     def get_debug(self) -> str:
-        output_lst = [
-            "".join(map(lambda box: box.get_debug(), row)) for row in self.grid
-        ]
-        return "\n".join(output_lst)
+        output_lst: list[str] = []
+        for row in self.grid:
+            line_lst: list[str] = ["".join(box.get_debug(Direction.NORTH) for box in row) + "+",
+                                   "".join(box.get_debug(Direction.EAST) for box in row) + "|"]
+            output_lst.extend(line_lst)
+        end_list: list[str] = ["".join(box.get_debug(Direction.SOUTH) for box in row) + "+"]
+
+
+        # "".join(map(lambda box: box.get_debug(Direction.SOUTH), row)) + "+",
+
+        # output_lst = [
+        #     "".join(map(lambda box: box.get_debug(), row)) for row in self.grid
+        # ]
+        return "\n".join(output_lst + end_list)
 
     def get_box(self, x: int, y: int) -> MazeBox:
         if self._is_bounded(x, y):
@@ -185,7 +196,7 @@ class MazeGrid:
 
 
 if __name__ == "__main__":
-    grid = MazeGrid(40, 15)
+    grid = MazeGrid(20, 10)
     print(f"grid before:\n{grid.get_debug()}")
     for box in grid.get_boxes():
         for dir in Direction:
