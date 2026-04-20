@@ -1,3 +1,4 @@
+from typing import Optional
 from .common import Direction
 
 
@@ -40,21 +41,30 @@ class MazeBox:
     def get_output(self) -> str:
         return self._get_hexa()
 
-    def get_debug(self, direction: Direction,) -> str:
+    def get_debug(self, direction: Direction, entry: Optional[tuple[int, int]]
+                  = None, exit: Optional[tuple[int, int]] = None) -> str:
         if direction == Direction.NORTH:
-            return "+--" if self.walls[Direction.NORTH] else "+  "
+            return "+---" if self.walls[Direction.NORTH] else "+   "
         if direction == Direction.SOUTH:
-            return "+--"
-        if direction.name == "EAST":
-            return "|  " if self.walls[Direction.WEST] else "   "
+            return "+---" if self.walls[Direction.SOUTH] else "+   "
+        if direction == Direction.EAST:
+            wall_left = "|" if self.walls[Direction.WEST] else " "
+            if exit and self.x == exit[0] and self.y == exit[1]:
+                return f"{wall_left} 0 "
+            elif entry and self.x == entry[0] and self.y == entry[1]:
+                return f"{wall_left} - "
+            else:
+                return f"{wall_left}   "
         return ""
 
     def break_wall(self, direction: Direction) -> None:
         self.walls[direction] = False
-
-    # -------------------
-    # is wall
-    # -------------------        
+        
+        # -------------------
+        # marquer comme visiter
+        # -------------------
+        # self.is_visited = True
+      
 
     def is_wall(self, direction: Direction) -> bool:
         return self.walls[direction]
@@ -138,9 +148,12 @@ class MazeGrid:
     def _is_bounded(self, x: int, y: int) -> bool:
         return 0 <= x < self.width and 0 <= y < self.height
 
-    def __init__(self, width: int, height: int) -> None:
+    def __init__(self, width: int, height: int, entry: tuple, exit: tuple, seed: int) -> None:
+        self.entry = entry
+        self.exit = exit
         self.width = width
         self.height = height
+        self.seed = seed
         self.grid = self._generate_grid()
 
     def get_output(self) -> str:
@@ -157,17 +170,15 @@ class MazeGrid:
     def get_debug(self) -> str:
         output_lst: list[str] = []
         for row in self.grid:
-            line_lst: list[str] = ["".join(box.get_debug(Direction.NORTH) for box in row) + "+",
-                                   "".join(box.get_debug(Direction.EAST) for box in row) + "|"]
+            line_lst: list[str] = ["".join(box.get_debug(Direction.NORTH)
+                                           for box in row) + "+",
+                                   "".join(box.get_debug(Direction.EAST,
+                                                         self.entry, self.exit)
+                                           for box in row) + "|"]
             output_lst.extend(line_lst)
-        end_list: list[str] = ["".join(box.get_debug(Direction.SOUTH) for box in row) + "+"]
+        end_list: list[str] = ["".join(box.get_debug(Direction.SOUTH)
+                                       for box in row) + "+"]
 
-
-        # "".join(map(lambda box: box.get_debug(Direction.SOUTH), row)) + "+",
-
-        # output_lst = [
-        #     "".join(map(lambda box: box.get_debug(), row)) for row in self.grid
-        # ]
         return "\n".join(output_lst + end_list)
 
     def get_box(self, x: int, y: int) -> MazeBox:

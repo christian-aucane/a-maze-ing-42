@@ -12,7 +12,7 @@ class GenerationAlgorithm(ABC):
 
     @abstractmethod
     def run(
-        self, grid: MazeGrid, start: tuple[int, int], end: tuple[int, int]
+        self, grid: MazeGrid, entry: tuple[int, int], exit: tuple[int, int]
     ) -> bool: ...
 
 
@@ -43,8 +43,9 @@ class MazeGenerator:
         entry: tuple[int, int],
         exit: tuple[int, int],
         is_perfect: bool,
+        seed: int
     ) -> Optional[MazeGrid]:
-        grid = MazeGrid(*size)
+        grid = MazeGrid(*size, entry, exit, seed)
         algo = self.algo_class(
             grid=grid, entry=entry, exit=exit, is_perfect=is_perfect
         )
@@ -62,9 +63,10 @@ def generate_maze(config: Config) -> MazeGrid | None:
 
     grid = generator.generate_maze(
         size=(config.width, config.height),
-        start=config.entry,
-        end=config.exit,
+        entry=config.entry,
+        exit=config.exit,
         is_perfect=config.perfect,
+        seed =config.seed
     )
     if grid is None:
         print("Error durring maze generation...")
@@ -75,7 +77,7 @@ def generate_maze(config: Config) -> MazeGrid | None:
 if __name__ == "__main__":
     generator = MazeGenerator(algo_name="test")
     maze = generator.generate_maze(
-        size=(40, 15), start=(0, 0), end=(14, 14), is_perfect=True
+        size=(40, 15), entry=(0, 0), exit=(14, 14), is_perfect=True
     )
     if maze is not None:
         print(f"maze:\n{maze.get_debug()}")

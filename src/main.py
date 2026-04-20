@@ -1,3 +1,4 @@
+
 from .config import parse_config_file
 from .generator.maze_generator import generate_maze
 from .solver import solve_maze
@@ -12,6 +13,7 @@ def run(config_file_path: str) -> int:
 
     # Generate maze
     maze = generate_maze(config=config)
+    print(f"grid after:\n{maze.get_debug()}")
     if maze is None:
         print("Error: failed to generate maze.")
         return 1

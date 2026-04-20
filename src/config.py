@@ -1,7 +1,7 @@
 """Parse config."""
 
 from typing import Any
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class Config(BaseModel):
@@ -11,7 +11,7 @@ class Config(BaseModel):
     exit: tuple[int, int] = Field(...)
     perfect: bool = Field(...)
     output_file: str = Field(...)
-    seed: int | None = Field(default=None)
+    seed: int | str = Field(default=None)
     gen_algorithm: str = Field(default="...")
     solve_algorithm: str = Field(default="DFS")
     display_mode: str = Field(default="...")
@@ -21,6 +21,17 @@ class Config(BaseModel):
     def entry_exit(cls, value: str) -> tuple[int, int]:
         x, y = map(int, value.split(","))
         return (x, y)
+
+    @model_validator(mode="after")
+    def validate_entry_exit(self) -> tuple[int, int]:
+        xe, ye = self.exit
+        xs, ys = self.entry
+        if xe > self.width or ye > self.height:
+            raise ValueError("the Exit value greater than the size of grid")
+        elif xs > self.width or ys > self.height:
+            raise ValueError("the Entry value greater than the size of grid")
+        return self
+
 
 
 def parse_config_file(config_file_path: str) -> Config | None:
