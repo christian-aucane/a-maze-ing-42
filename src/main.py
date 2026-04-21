@@ -13,10 +13,10 @@ def run(config_file_path: str) -> int:
 
     # Generate maze
     maze = generate_maze(config=config)
-    print(f"grid after:\n{maze.get_debug()}")
     if maze is None:
         print("Error: failed to generate maze.")
         return 1
+    print(f"grid after:\n{maze.get_debug()}")
 
     # Solve maze
     solution = solve_maze(maze=maze, config=config)
