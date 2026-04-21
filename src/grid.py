@@ -33,6 +33,7 @@ class MazeBox:
         self.y = y
         self.is_on_ft_pattern = is_on_ft_pattern
         self.is_visited = False
+        self.solution_dir = None
         self.walls = self._generate_walls()
 
     def __str__(self) -> str:
@@ -41,18 +42,24 @@ class MazeBox:
     def get_output(self) -> str:
         return self._get_hexa()
 
-    def get_debug(self, direction: Direction, entry: Optional[tuple[int, int]]
-                  = None, exit: Optional[tuple[int, int]] = None) -> str:
+    def get_debug(
+        self,
+        direction: Direction,
+        entry: Optional["MazeBox"] = None,
+        exit: Optional["MazeBox"] = None,
+    ) -> str:
         if direction == Direction.NORTH:
             return "+---" if self.walls[Direction.NORTH] else "+   "
         if direction == Direction.SOUTH:
             return "+---" if self.walls[Direction.SOUTH] else "+   "
         if direction == Direction.EAST:
             wall_left = "|" if self.walls[Direction.WEST] else " "
-            if exit and self.x == exit[0] and self.y == exit[1]:
+            if exit is self:
                 return f"{wall_left} 0 "
-            elif entry and self.x == entry[0] and self.y == entry[1]:
+            elif entry is self:
                 return f"{wall_left} - "
+            elif self.solution_dir is not None:
+                return f"{wall_left} {self.solution_dir.get_debug()} "
             else:
                 return f"{wall_left}   "
         return ""
@@ -142,18 +149,22 @@ class MazeGrid:
     def _is_bounded(self, x: int, y: int) -> bool:
         return 0 <= x < self.width and 0 <= y < self.height
 
-    def __init__(self, width: int, height: int,
-                 entry: tuple[int, int], exit: tuple[int, int]) -> None:
-        self.entry = entry
-        self.exit = exit
+    def __init__(
+        self,
+        width: int,
+        height: int,
+        entry: tuple[int, int],
+        exit: tuple[int, int],
+    ) -> None:
         self.width = width
         self.height = height
         self.grid = self._generate_grid()
+        self.entry = self.get_box(*entry)
+        self.exit = self.get_box(*exit)
 
     def get_output(self) -> str:
         output_lst = [
-            "".join(map(lambda box: box.get_output(), row))
-            for row in self.grid
+            "".join(map(lambda box: box.get_output(), row)) for row in self.grid
         ]
         return "\n".join(output_lst)
 
@@ -164,14 +175,18 @@ class MazeGrid:
     def get_debug(self) -> str:
         output_lst: list[str] = []
         for row in self.grid:
-            line_lst: list[str] = ["".join(box.get_debug(Direction.NORTH)
-                                           for box in row) + "+",
-                                   "".join(box.get_debug(Direction.EAST,
-                                                         self.entry, self.exit)
-                                           for box in row) + "|"]
+            line_lst: list[str] = [
+                "".join(box.get_debug(Direction.NORTH) for box in row) + "+",
+                "".join(
+                    box.get_debug(Direction.EAST, self.entry, self.exit)
+                    for box in row
+                )
+                + "|",
+            ]
             output_lst.extend(line_lst)
-        end_list: list[str] = ["".join(box.get_debug(Direction.SOUTH)
-                                       for box in row) + "+"]
+        end_list: list[str] = [
+            "".join(box.get_debug(Direction.SOUTH) for box in row) + "+"
+        ]
 
         return "\n".join(output_lst + end_list)
 
