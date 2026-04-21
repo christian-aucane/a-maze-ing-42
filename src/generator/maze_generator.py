@@ -22,7 +22,7 @@ class MazeGenerator:
             self.algo_class = GENERATION_ALGORITHMS_CLASSES[algo_name]
         except KeyError:
             raise ValueError(
-                "Invalid algorithm name ... Valid names: "
+                f"Invalid algorithm name '{algo_name}' ... Valid names: "
                 f"{GENERATION_ALGORITHMS_CLASSES.keys()}"
             )
 
