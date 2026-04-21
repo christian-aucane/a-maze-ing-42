@@ -25,7 +25,8 @@ class MazeGenerator:
         'kwargs': {kwargs...}  # Optionnal
     """
 
-    ALGORITHMS = {"...": {"class": GenerationAlgorithm}}
+    algo_class: type[GenerationAlgorithm]
+    # ALGORITHMS = {"...": {"class": GenerationAlgorithm}}
 
     # TODO: separer l'algo et faire de la composition ?
     def __init__(self, algo_name: str):
@@ -66,7 +67,7 @@ def generate_maze(config: Config) -> MazeGrid | None:
         entry=config.entry,
         exit=config.exit,
         is_perfect=config.perfect,
-        seed =config.seed
+        seed=config.seed
     )
     if grid is None:
         print("Error durring maze generation...")

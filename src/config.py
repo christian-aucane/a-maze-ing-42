@@ -12,7 +12,7 @@ class Config(BaseModel):
     perfect: bool = Field(...)
     output_file: str = Field(...)
     seed: int | str = Field(default=None)
-    gen_algorithm: str = Field(default="...")
+    gen_algorithm: str = Field(default="dfs")
     solve_algorithm: str = Field(default="DFS")
     display_mode: str = Field(default="...")
 
