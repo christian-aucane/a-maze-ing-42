@@ -2,8 +2,7 @@ from typing import Optional
 
 from src.grid import MazeGrid
 from src.config import Config
-from .algorithms import GENERATION_ALGORITHMS_CLASSES
-from .algorithms.abstract import GenerationAlgorithm
+from .algorithms import GENERATION_ALGORITHMS_CLASSES, GenerationAlgorithm
 
 
 class MazeGenerator:
@@ -33,12 +32,9 @@ class MazeGenerator:
         entry: tuple[int, int],
         exit: tuple[int, int],
         is_perfect: bool,
-        seed: int | None
     ) -> Optional[MazeGrid]:
         grid = MazeGrid(*size, entry, exit)
-        algo = self.algo_class(
-            grid=grid, entry=entry, exit=exit, is_perfect=is_perfect, seed=seed
-        )
+        algo = self.algo_class(grid=grid, is_perfect=is_perfect)
         if algo.run():
             return grid
         return None
@@ -56,7 +52,6 @@ def generate_maze(config: Config) -> MazeGrid | None:
         entry=config.entry,
         exit=config.exit,
         is_perfect=config.perfect,
-        seed=config.seed
     )
     if grid is None:
         print("Error durring maze generation...")
@@ -67,7 +62,7 @@ def generate_maze(config: Config) -> MazeGrid | None:
 if __name__ == "__main__":
     generator = MazeGenerator(algo_name="test")
     maze = generator.generate_maze(
-        size=(40, 15), entry=(0, 0), exit=(14, 14), is_perfect=True, seed=42
+        size=(40, 15), entry=(0, 0), exit=(14, 14), is_perfect=True
     )
     if maze is not None:
         print(f"maze:\n{maze.get_debug()}")

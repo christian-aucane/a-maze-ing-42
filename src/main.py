@@ -1,7 +1,8 @@
+import random
 
 from .config import parse_config_file
 from .generator.maze_generator import generate_maze
-from .solver import solve_maze
+from .solver.maze_solver import solve_maze
 
 
 def run(config_file_path: str) -> int:
@@ -10,13 +11,14 @@ def run(config_file_path: str) -> int:
     if config is None:
         print("Error: failed to parse config file.")
         return 1
+    if config.seed is not None:
+        random.seed(config.seed)
 
     # Generate maze
     maze = generate_maze(config=config)
     if maze is None:
         print("Error: failed to generate maze.")
         return 1
-    print(f"grid after:\n{maze.get_debug()}")
 
     # Solve maze
     solution = solve_maze(maze=maze, config=config)
@@ -26,7 +28,7 @@ def run(config_file_path: str) -> int:
 
     # Print for debug
     print(f"CONFIG:\n{config}\n")
-    print(f"MAZE:\n{maze}\n")
+    print(f"MAZE:\n{maze.get_debug()}\n")
     print(f"SOLUTION:\n{solution}\n")
 
     # TODO: write output file, run UI (cli or gui)

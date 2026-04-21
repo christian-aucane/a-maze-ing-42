@@ -3,17 +3,15 @@ from src.common import Direction
 from typing import Any
 import random
 
+from src.grid import OutOfBoundError
+
 
 class DFS(GenerationAlgorithm):
-
     def run(self) -> bool:
-        if self.seed:
-            random.seed(self.seed)
-
         # pile du chemin
-        stack = [self.entry]
-        self.entry.is_visited = True
-        print(f"DFS start: entry={self.entry}, exit={self.exit}")
+        stack = [self.current_box]
+        self.current_box.is_visited = True
+        print(f"DFS start: entry={self.grid.entry}, exit={self.grid.exit}")
 
         while stack:
             # sommet de la pile
@@ -25,10 +23,12 @@ class DFS(GenerationAlgorithm):
             for direction in Direction:
                 try:
                     neighbour = self.grid.get_neighbour(current, direction)
-                    if (not neighbour.is_visited
-                            and not neighbour.is_on_ft_pattern):
+                    if (
+                        not neighbour.is_visited
+                        and not neighbour.is_on_ft_pattern
+                    ):
                         neighbours.append((direction, neighbour))
-                except Exception:
+                except OutOfBoundError:
                     pass
 
             if neighbours:
