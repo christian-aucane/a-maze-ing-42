@@ -164,7 +164,8 @@ class MazeGrid:
 
     def get_output(self) -> str:
         output_lst = [
-            "".join(map(lambda box: box.get_output(), row)) for row in self.grid
+            "".join(map(lambda box: box.get_output(), row))
+            for row in self.grid
         ]
         return "\n".join(output_lst)
 
