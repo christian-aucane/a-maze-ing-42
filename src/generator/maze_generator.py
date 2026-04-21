@@ -1,19 +1,9 @@
-from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Optional
 
 from src.grid import MazeGrid
 from src.config import Config
 from .algorithms import GENERATION_ALGORITHMS_CLASSES
-
-
-class GenerationAlgorithm(ABC):
-    def __init__(self, is_perfect: bool, *args: Any, **kwargs: Any):
-        self.is_perfect = is_perfect
-
-    @abstractmethod
-    def run(
-        self, grid: MazeGrid, start: tuple[int, int], end: tuple[int, int]
-    ) -> bool: ...
+from .algorithms.abstract import GenerationAlgorithm
 
 
 class MazeGenerator:
@@ -25,7 +15,7 @@ class MazeGenerator:
         'kwargs': {kwargs...}  # Optionnal
     """
 
-    ALGORITHMS = {"...": {"class": GenerationAlgorithm}}
+    algo_class: type[GenerationAlgorithm]
 
     # TODO: separer l'algo et faire de la composition ?
     def __init__(self, algo_name: str):
@@ -40,13 +30,14 @@ class MazeGenerator:
     def generate_maze(
         self,
         size: tuple[int, int],
-        start: tuple[int, int],
-        end: tuple[int, int],
+        entry: tuple[int, int],
+        exit: tuple[int, int],
         is_perfect: bool,
+        seed: int | None
     ) -> Optional[MazeGrid]:
-        grid = MazeGrid(*size)
+        grid = MazeGrid(*size, entry, exit)
         algo = self.algo_class(
-            grid=grid, start=start, end=end, is_perfect=is_perfect
+            grid=grid, entry=entry, exit=exit, is_perfect=is_perfect, seed=seed
         )
         if algo.run():
             return grid
@@ -62,9 +53,10 @@ def generate_maze(config: Config) -> MazeGrid | None:
 
     grid = generator.generate_maze(
         size=(config.width, config.height),
-        start=config.entry,
-        end=config.exit,
+        entry=config.entry,
+        exit=config.exit,
         is_perfect=config.perfect,
+        seed=config.seed
     )
     if grid is None:
         print("Error durring maze generation...")
@@ -75,7 +67,7 @@ def generate_maze(config: Config) -> MazeGrid | None:
 if __name__ == "__main__":
     generator = MazeGenerator(algo_name="test")
     maze = generator.generate_maze(
-        size=(15, 15), start=(0, 0), end=(14, 14), is_perfect=True
+        size=(40, 15), entry=(0, 0), exit=(14, 14), is_perfect=True, seed=42
     )
     if maze is not None:
         print(f"maze:\n{maze.get_debug()}")

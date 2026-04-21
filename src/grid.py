@@ -1,3 +1,4 @@
+from typing import Optional
 from .common import Direction
 
 
@@ -40,9 +41,21 @@ class MazeBox:
     def get_output(self) -> str:
         return self._get_hexa()
 
-    def get_debug(self) -> str:
-        return "X" if all(self.walls.values()) else "."
-        # return self._get_hexa()
+    def get_debug(self, direction: Direction, entry: Optional[tuple[int, int]]
+                  = None, exit: Optional[tuple[int, int]] = None) -> str:
+        if direction == Direction.NORTH:
+            return "+---" if self.walls[Direction.NORTH] else "+   "
+        if direction == Direction.SOUTH:
+            return "+---" if self.walls[Direction.SOUTH] else "+   "
+        if direction == Direction.EAST:
+            wall_left = "|" if self.walls[Direction.WEST] else " "
+            if exit and self.x == exit[0] and self.y == exit[1]:
+                return f"{wall_left} 0 "
+            elif entry and self.x == entry[0] and self.y == entry[1]:
+                return f"{wall_left} - "
+            else:
+                return f"{wall_left}   "
+        return ""
 
     def break_wall(self, direction: Direction) -> None:
         self.walls[direction] = False
@@ -72,7 +85,7 @@ class MazeGrid:
         x_correction = int(self.width % 2 == 1)
         y_correction = int(self.height % 2 == 1)
         border_width = (self.width - 7 - x_correction) // 2
-        border_height = (self.height - 6 - y_correction) // 2
+        border_height = (self.height - 5 - y_correction) // 2
         x_in_pattern = (
             border_width < x < self.width - border_width - x_correction
         )
@@ -129,7 +142,10 @@ class MazeGrid:
     def _is_bounded(self, x: int, y: int) -> bool:
         return 0 <= x < self.width and 0 <= y < self.height
 
-    def __init__(self, width: int, height: int) -> None:
+    def __init__(self, width: int, height: int,
+                 entry: tuple[int, int], exit: tuple[int, int]) -> None:
+        self.entry = entry
+        self.exit = exit
         self.width = width
         self.height = height
         self.grid = self._generate_grid()
@@ -141,11 +157,23 @@ class MazeGrid:
         ]
         return "\n".join(output_lst)
 
+    # -------------------
+    # afficher la Grid
+    # -------------------
+
     def get_debug(self) -> str:
-        output_lst = [
-            "".join(map(lambda box: box.get_debug(), row)) for row in self.grid
-        ]
-        return "\n".join(output_lst)
+        output_lst: list[str] = []
+        for row in self.grid:
+            line_lst: list[str] = ["".join(box.get_debug(Direction.NORTH)
+                                           for box in row) + "+",
+                                   "".join(box.get_debug(Direction.EAST,
+                                                         self.entry, self.exit)
+                                           for box in row) + "|"]
+            output_lst.extend(line_lst)
+        end_list: list[str] = ["".join(box.get_debug(Direction.SOUTH)
+                                       for box in row) + "+"]
+
+        return "\n".join(output_lst + end_list)
 
     def get_box(self, x: int, y: int) -> MazeBox:
         if self._is_bounded(x, y):
@@ -159,9 +187,12 @@ class MazeGrid:
         return [box for row in self.grid for box in row]
 
     def break_wall(self, box: MazeBox, direction: Direction) -> bool:
-        neighbour = self.get_neighbour(box, direction)
-        if neighbour is None:
+        try:
+            neighbour = self.get_neighbour(box, direction)
+        except OutOfBoundError:
             return False
+        # if neighbour is None:
+        #     return False
         if box.is_on_ft_pattern or neighbour.is_on_ft_pattern:
             return False
         box.break_wall(direction)
@@ -170,7 +201,7 @@ class MazeGrid:
 
 
 if __name__ == "__main__":
-    grid = MazeGrid(15, 15)
+    grid = MazeGrid(20, 10, (0, 0), (14, 9))
     print(f"grid before:\n{grid.get_debug()}")
     for box in grid.get_boxes():
         for dir in Direction:
