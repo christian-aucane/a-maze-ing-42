@@ -7,6 +7,7 @@ Algo sample
 """
 
 GENERATION_ALGORITHMS_CLASSES: dict[str, type[GenerationAlgorithm]] = {
-    "dfs": DFS}
+    "dfs": DFS
+}
 
-__all__ = ["GENERATION_ALGORITHMS_CLASSES"]
+__all__ = ["GENERATION_ALGORITHMS_CLASSES", "GenerationAlgorithm"]
