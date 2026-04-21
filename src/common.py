@@ -8,5 +8,4 @@ class Direction(Enum):
     WEST = (-1, 0)
 
     def get_debug(self) -> str:
-        # TODO: use differents chars for differents directions
-        return "#"
+        return {"NORTH": "↑", "SOUTH": "↓", "EAST": "→", "WEST": "←"}[self.name]
