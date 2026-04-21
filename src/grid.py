@@ -33,7 +33,7 @@ class MazeBox:
         self.y = y
         self.is_on_ft_pattern = is_on_ft_pattern
         self.is_visited = False
-        self.solution_dir = None
+        self.solution_dir: Direction | None = None
         self.walls = self._generate_walls()
 
     def __str__(self) -> str:
