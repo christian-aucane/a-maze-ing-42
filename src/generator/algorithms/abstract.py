@@ -11,9 +11,7 @@ class GenerationAlgorithm(ABC):
         entry: tuple[int, int],
         exit: tuple[int, int],
         is_perfect: bool,
-        seed: int | None
     ):
-        self.seed = seed
         self.grid = grid
         self.entry = grid.get_box(*entry)
         self.exit = grid.get_box(*exit)

@@ -1,3 +1,4 @@
+import random
 
 from .config import parse_config_file
 from .generator.maze_generator import generate_maze
@@ -10,6 +11,9 @@ def run(config_file_path: str) -> int:
     if config is None:
         print("Error: failed to parse config file.")
         return 1
+    if config.seed is not None:
+        random.seed(config.seed)
+    print(config)
 
     # Generate maze
     maze = generate_maze(config=config)
