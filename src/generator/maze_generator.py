@@ -2,8 +2,7 @@ from typing import Optional
 
 from src.grid import MazeGrid
 from src.config import Config
-from .algorithms import GENERATION_ALGORITHMS_CLASSES
-from .algorithms.abstract import GenerationAlgorithm
+from .algorithms import GENERATION_ALGORITHMS_CLASSES, GenerationAlgorithm
 
 
 class MazeGenerator:
