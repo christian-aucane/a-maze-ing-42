@@ -11,10 +11,22 @@ class Config(BaseModel):
     exit: tuple[int, int] = Field(...)
     perfect: bool = Field(...)
     output_file: str = Field(...)
-    seed: int | str = Field(default=None)
+    seed: int | None = Field(default=None)
     gen_algorithm: str = Field(default="dfs")
-    solve_algorithm: str = Field(default="DFS")
+    solve_algorithm: str = Field(default="...")
     display_mode: str = Field(default="...")
+
+    @field_validator("seed", mode="before")
+    @classmethod
+    def seed_iput(cls, v: str) -> Any:
+        if v == "None" or v == "none" or v == "":
+            return None
+        else:
+            try:
+                return int(v)
+            except ValueError:
+                print(f"Invalid value: {v}")
+        return v
 
     @field_validator("entry", "exit", mode="before")
     @classmethod
@@ -23,7 +35,7 @@ class Config(BaseModel):
         return (x, y)
 
     @model_validator(mode="after")
-    def validate_entry_exit(self) -> tuple[int, int]:
+    def validate_entry_exit(self) -> Any:
         xe, ye = self.exit
         xs, ys = self.entry
         if xe > self.width or ye > self.height:
@@ -31,7 +43,6 @@ class Config(BaseModel):
         elif xs > self.width or ys > self.height:
             raise ValueError("the Entry value greater than the size of grid")
         return self
-
 
 
 def parse_config_file(config_file_path: str) -> Config | None:

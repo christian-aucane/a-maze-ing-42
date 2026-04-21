@@ -1,19 +1,9 @@
-from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Optional
 
 from src.grid import MazeGrid
 from src.config import Config
 from .algorithms import GENERATION_ALGORITHMS_CLASSES
-
-
-class GenerationAlgorithm(ABC):
-    def __init__(self, is_perfect: bool, *args: Any, **kwargs: Any):
-        self.is_perfect = is_perfect
-
-    @abstractmethod
-    def run(
-        self, grid: MazeGrid, entry: tuple[int, int], exit: tuple[int, int]
-    ) -> bool: ...
+from .algorithms.abstract import GenerationAlgorithm
 
 
 class MazeGenerator:
@@ -26,7 +16,6 @@ class MazeGenerator:
     """
 
     algo_class: type[GenerationAlgorithm]
-    # ALGORITHMS = {"...": {"class": GenerationAlgorithm}}
 
     # TODO: separer l'algo et faire de la composition ?
     def __init__(self, algo_name: str):
@@ -44,11 +33,11 @@ class MazeGenerator:
         entry: tuple[int, int],
         exit: tuple[int, int],
         is_perfect: bool,
-        seed: int
+        seed: int | None
     ) -> Optional[MazeGrid]:
-        grid = MazeGrid(*size, entry, exit, seed)
+        grid = MazeGrid(*size, entry, exit)
         algo = self.algo_class(
-            grid=grid, entry=entry, exit=exit, is_perfect=is_perfect
+            grid=grid, entry=entry, exit=exit, is_perfect=is_perfect, seed=seed
         )
         if algo.run():
             return grid
@@ -78,7 +67,7 @@ def generate_maze(config: Config) -> MazeGrid | None:
 if __name__ == "__main__":
     generator = MazeGenerator(algo_name="test")
     maze = generator.generate_maze(
-        size=(40, 15), entry=(0, 0), exit=(14, 14), is_perfect=True
+        size=(40, 15), entry=(0, 0), exit=(14, 14), is_perfect=True, seed=42
     )
     if maze is not None:
         print(f"maze:\n{maze.get_debug()}")

@@ -59,12 +59,6 @@ class MazeBox:
 
     def break_wall(self, direction: Direction) -> None:
         self.walls[direction] = False
-        
-        # -------------------
-        # marquer comme visiter
-        # -------------------
-        # self.is_visited = True
-      
 
     def is_wall(self, direction: Direction) -> bool:
         return self.walls[direction]
@@ -148,12 +142,12 @@ class MazeGrid:
     def _is_bounded(self, x: int, y: int) -> bool:
         return 0 <= x < self.width and 0 <= y < self.height
 
-    def __init__(self, width: int, height: int, entry: tuple, exit: tuple, seed: int) -> None:
+    def __init__(self, width: int, height: int,
+                 entry: tuple[int, int], exit: tuple[int, int]) -> None:
         self.entry = entry
         self.exit = exit
         self.width = width
         self.height = height
-        self.seed = seed
         self.grid = self._generate_grid()
 
     def get_output(self) -> str:
@@ -207,7 +201,7 @@ class MazeGrid:
 
 
 if __name__ == "__main__":
-    grid = MazeGrid(20, 10)
+    grid = MazeGrid(20, 10, (0, 0), (14, 9))
     print(f"grid before:\n{grid.get_debug()}")
     for box in grid.get_boxes():
         for dir in Direction:
