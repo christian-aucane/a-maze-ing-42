@@ -3,6 +3,8 @@ from src.common import Direction
 from typing import Any
 import random
 
+from src.grid import OutOfBoundError
+
 
 class DFS(GenerationAlgorithm):
     def run(self) -> bool:
@@ -26,7 +28,7 @@ class DFS(GenerationAlgorithm):
                         and not neighbour.is_on_ft_pattern
                     ):
                         neighbours.append((direction, neighbour))
-                except Exception:
+                except OutOfBoundError:
                     pass
 
             if neighbours:
