@@ -9,9 +9,9 @@ from src.grid import OutOfBoundError
 class DFS(GenerationAlgorithm):
     def run(self) -> bool:
         # pile du chemin
-        stack = [self.entry]
-        self.entry.is_visited = True
-        print(f"DFS start: entry={self.entry}, exit={self.exit}")
+        stack = [self.current_box]
+        self.current_box.is_visited = True
+        print(f"DFS start: entry={self.grid.entry}, exit={self.grid.exit}")
 
         while stack:
             # sommet de la pile

@@ -8,14 +8,10 @@ class GenerationAlgorithm(ABC):
     def __init__(
         self,
         grid: MazeGrid,
-        entry: tuple[int, int],
-        exit: tuple[int, int],
         is_perfect: bool,
     ):
         self.grid = grid
-        self.entry = grid.get_box(*entry)
-        self.exit = grid.get_box(*exit)
-        self.current_box = self.entry
+        self.current_box = self.grid.entry
         self.is_perfect = is_perfect
         self.movements: list[Direction] = []
 

@@ -35,9 +35,7 @@ class MazeGenerator:
         is_perfect: bool,
     ) -> Optional[MazeGrid]:
         grid = MazeGrid(*size, entry, exit)
-        algo = self.algo_class(
-            grid=grid, entry=entry, exit=exit, is_perfect=is_perfect
-        )
+        algo = self.algo_class(grid=grid, is_perfect=is_perfect)
         if algo.run():
             return grid
         return None
