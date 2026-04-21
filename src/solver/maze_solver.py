@@ -17,7 +17,7 @@ class MazeSolver:
             )
 
     @staticmethod
-    def update_grid(grid: MazeGrid, solution=list[Direction]):
+    def update_grid(grid: MazeGrid, solution=list[Direction]) -> None:
         # TODO: catch OutOfBoundError ??
         current = grid.entry
         for dir in solution:
