@@ -2,7 +2,7 @@ import random
 
 from .config import parse_config_file
 from .generator.maze_generator import generate_maze
-from .solver import solve_maze
+from .solver.maze_solver import solve_maze
 
 
 def run(config_file_path: str) -> int:
