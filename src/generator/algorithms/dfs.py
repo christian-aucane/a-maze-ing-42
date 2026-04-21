@@ -20,7 +20,7 @@ class DFS(GenerationAlgorithm):
             current = stack[-1]
             self.current_box = current
 
-            # directions vers des voisins non visités
+            # directions vers des voisins non visitésh
             neighbours: list[Any] = []
             for direction in Direction:
                 try:
