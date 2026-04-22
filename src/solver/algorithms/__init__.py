@@ -10,8 +10,8 @@ Algo sample
 
 SOLVING_ALGORITHMS_CLASSES: dict[str, type[SolvingAlgorithm]] = {
     "test": TestSolvingAlgorithm,
-    "A*": AStar,
     "dfs_solver": DFSSolver,
+    "A*": AStar,
 }
 
 __all__ = ["SOLVING_ALGORITHMS_CLASSES", "SolvingAlgorithm"]
