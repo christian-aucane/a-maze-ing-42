@@ -1,4 +1,5 @@
 from .abstract import SolvingAlgorithm
+from .dfs_solver import DFSSolver
 from .test_algo import TestSolvingAlgorithm
 from .a_star import AStar
 
@@ -10,6 +11,7 @@ Algo sample
 SOLVING_ALGORITHMS_CLASSES: dict[str, type[SolvingAlgorithm]] = {
     "test": TestSolvingAlgorithm,
     "A*": AStar,
+    "dfs_solver": DFSSolver,
 }
 
 __all__ = ["SOLVING_ALGORITHMS_CLASSES", "SolvingAlgorithm"]
