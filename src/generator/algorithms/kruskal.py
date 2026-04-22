@@ -8,20 +8,22 @@ from src.grid import OutOfBoundError, MazeBox, MazeGrid
 class Kruskal(GenerationAlgorithm):
     def __init__(self, grid: MazeGrid, is_perfect: bool):
         super().__init__(grid=grid, is_perfect=is_perfect)
-        self.parents = {box: box for box in self.grid.get_boxes()}
+        self.parents: dict[MazeBox, MazeBox] = {
+            box: box for box in self.grid.get_boxes()
+        }
 
-    def find(self, cell: MazeBox):
+    def find(self, cell: MazeBox) -> MazeBox:
         if cell is self.parents[cell]:
             return cell
         self.parents[cell] = self.find(self.parents[cell])
         return self.parents[cell]
 
-    def union(self, cell_a: MazeBox, cell_b: MazeBox):
+    def union(self, cell_a: MazeBox, cell_b: MazeBox) -> None:
         root_a = self.find(cell_a)
         root_b = self.find(cell_b)
         self.parents[root_b] = root_a
 
-    def are_connected(self, cell_a, cell_b):
+    def are_connected(self, cell_a: MazeBox, cell_b: MazeBox) -> bool:
         return self.find(cell_a) is self.find(cell_b)
 
     def run(self) -> bool:
