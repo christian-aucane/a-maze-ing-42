@@ -12,6 +12,7 @@ SOLVING_ALGORITHMS_CLASSES: dict[str, type[SolvingAlgorithm]] = {
     "test": TestSolvingAlgorithm,
     "dfs_solver": DFSSolver,
     "A*": AStar,
+    "dfs_solver": DFSSolver,
 }
 
 __all__ = ["SOLVING_ALGORITHMS_CLASSES", "SolvingAlgorithm"]
