@@ -1,5 +1,6 @@
 from .abstract import SolvingAlgorithm
 from .test_algo import TestSolvingAlgorithm
+from .a_star import AStar
 
 """
 Algo sample
@@ -7,7 +8,8 @@ Algo sample
 """
 
 SOLVING_ALGORITHMS_CLASSES: dict[str, type[SolvingAlgorithm]] = {
-    "test": TestSolvingAlgorithm
+    "test": TestSolvingAlgorithm,
+    "A*": AStar,
 }
 
 __all__ = ["SOLVING_ALGORITHMS_CLASSES", "SolvingAlgorithm"]
