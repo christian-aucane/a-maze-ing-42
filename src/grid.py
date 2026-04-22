@@ -77,7 +77,7 @@ class MazeBox:
         return (self.x + dx, self.y + dy)
 
     def get_open_directions(
-        self, previous_direction: Direction
+        self, previous_direction: Direction | None = None
     ) -> tuple[Direction, ...]:
         return tuple(
             dir
@@ -216,6 +216,15 @@ class MazeGrid:
         box.break_wall(direction)
         neighbour.break_wall(self._get_oposite_direction(direction))
         return True
+
+    def get_open_neighbours(self, box: MazeBox) -> list[MazeBox]:
+        neighbours = []
+        for dir in box.get_open_directions():
+            try:
+                neighbours.append(self.get_neighbour(box, dir))
+            except OutOfBoundError:
+                continue
+        return neighbours
 
 
 if __name__ == "__main__":
