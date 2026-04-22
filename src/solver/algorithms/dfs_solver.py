@@ -1,51 +1,50 @@
 from .abstract import SolvingAlgorithm
 from src.common import Direction
-from typing import Any
-import random
+from src.grid import MazeBox
+
 
 from src.grid import OutOfBoundError
 
 
 class DFSSolver(SolvingAlgorithm):
-    def run(self) -> list[dict]:
+    def run(self) -> list[Direction]:
         # pile du chemin
-        stack = [self.current_box]
+        for row in self.grid.grid:
+            for box in row:
+                box.is_visited = False
+
+        stack: list[MazeBox] = [self.current_box]
+        self.current_box.is_visited = True
         solutions: list[Direction] = []
-        # self.current_box.is_visited = True
-        # print(f"DFS Solver start: entry={self.grid.entry}, exit={self.grid.exit}")
-        print("self.grid :", self.grid)
-        # for row in self.grid:
-        #     for cell in row:
-        #         cell.is_visited = False
 
         while stack:
             # sommet de la pile
             current = stack[-1]
             self.current_box = current
-            if current == self.grid.exit:
+            if self.current_box == self.grid.exit:
                 break
 
-            # directions vers des voisins non visitésh
-            neighbours: list[Any] = []
+            found: bool = False
+
             for direction, value in self.current_box.walls.items():
                 if not value:
                     try:
                         neighbour = self.grid.get_neighbour(current, direction)
-                        neighbours.append((direction, neighbour))
-                        # print("neighbour: ", neighbour)
+                        if not neighbour.is_visited:
+                            neighbour.is_visited = True
+                            stack.append(neighbour)
+                            solutions.append(direction)
+                            found = True
+                            break
                     except OutOfBoundError:
                         pass
 
-            if neighbours:
-                # on choisit un voisin au hasard
-                direction, neighbour = random.choice(neighbours)
-                solutions.append(direction)
-                stack.append(neighbour)
-
-            else:
-                # cul-de-sac on recule
-                stack[-1].solution_dir = None
+            if not found:
                 stack.pop()
-                solutions.pop()
+                if solutions:
+                    solutions.pop()
+
+        print("solutions: ", solutions)
+        print("stack: ", stack)
 
         return solutions
