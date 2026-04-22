@@ -11,10 +11,10 @@ class Kruskal(GenerationAlgorithm):
         self.parents = {box: box for box in self.grid.get_boxes()}
 
     def find(self, cell: MazeBox):
-        current = cell
-        while current != self.parents[current]:
-            current = self.parents[current]
-        return current
+        if cell is self.parents[cell]:
+            return cell
+        self.parents[cell] = self.find(self.parents[cell])
+        return self.parents[cell]
 
     def union(self, cell_a: MazeBox, cell_b: MazeBox):
         root_a = self.find(cell_a)
@@ -22,7 +22,7 @@ class Kruskal(GenerationAlgorithm):
         self.parents[root_b] = root_a
 
     def are_connected(self, cell_a, cell_b):
-        return self.find(cell_a) == self.find(cell_b)
+        return self.find(cell_a) is self.find(cell_b)
 
     def run(self) -> bool:
         print(f"Kruskal start: entry={self.grid.entry}, exit={self.grid.exit}")
@@ -33,6 +33,8 @@ class Kruskal(GenerationAlgorithm):
             for dir in [Direction.SOUTH, Direction.EAST]:
                 try:
                     neighbour = self.grid.get_neighbour(box=cell, direction=dir)
+                    if neighbour.is_on_ft_pattern:
+                        continue
                     walls.append((cell, neighbour, dir))
                 except OutOfBoundError:
                     continue
