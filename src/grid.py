@@ -55,8 +55,8 @@ class MazeBox:
         if direction == Direction.EAST:
             wall_left = "|" if self.walls[Direction.WEST] else " "
             if self.is_on_ft_pattern:
-                return f"{wall_left} X "
-            if exit is self:
+                return f"{wall_left}\033[41m   \033[0m"
+            if exit and self.x == exit[0] and self.y == exit[1]:
                 return f"{wall_left} 0 "
             elif entry is self:
                 return f"{wall_left} - "
