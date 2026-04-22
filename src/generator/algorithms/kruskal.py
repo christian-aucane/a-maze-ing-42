@@ -25,8 +25,11 @@ class Kruskal(GenerationAlgorithm):
         return self.find(cell_a) == self.find(cell_b)
 
     def run(self) -> bool:
+        print(f"Kruskal start: entry={self.grid.entry}, exit={self.grid.exit}")
         walls = []
         for cell in self.grid.get_boxes():
+            if cell.is_on_ft_pattern:
+                continue
             for dir in [Direction.SOUTH, Direction.EAST]:
                 try:
                     neighbour = self.grid.get_neighbour(box=cell, direction=dir)
