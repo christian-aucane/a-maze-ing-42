@@ -1,5 +1,4 @@
 from enum import Enum
-from .grid import MazeGrid
 
 
 class Colors(Enum):
@@ -21,18 +20,20 @@ class Colors(Enum):
     LIGHT_WHITE = "\033[1;37m"
 
 
-def change_colors_walls(colors: str, grid: MazeGrid) -> MazeGrid:
-    for color in Colors:
-        if colors.upper() == color.name:
-            for row in grid.grid:
-                for box in row:
-                    box.walls_color = color
-    return grid
-
-
-if __name__ == "__main__":
-    grid = MazeGrid(20, 10, (0, 0), (14, 9))
-    grid = change_colors_walls("yellow", grid)
-    for row in grid.grid:
-        for box in row:
-            print(box.walls_color)
+COLORS: dict[str, Colors] = {
+    "wight": Colors.WIGHT,
+    "red": Colors.RED,
+    "green": Colors.GREEN,
+    "brown": Colors.BROWN,
+    "blue": Colors.BLUE,
+    "purple": Colors.PURPLE,
+    "cyan": Colors.CYAN,
+    "light_gray": Colors.LIGHT_GRAY,
+    "dark_gray": Colors.DARK_GRAY,
+    "light_red": Colors.LIGHT_RED,
+    "light_green": Colors.LIGHT_GREEN,
+    "yellow": Colors.YELLOW,
+    "light_blue": Colors.LIGHT_BLUE,
+    "light_purple": Colors.LIGHT_PURPLE,
+    "light_cyan": Colors.LIGHT_CYAN,
+    "light_white": Colors.LIGHT_WHITE}

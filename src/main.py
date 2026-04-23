@@ -31,6 +31,10 @@ def run(config_file_path: str) -> int:
     print(f"MAZE:\n{maze.get_debug()}\n")
     print(f"SOLUTION:\n{solution}\n")
 
+    color_change = input("input color: ")
+    if maze.change_colors_walls(color_change):
+        print(f"MAZE:\n{maze.get_debug()}\n")
+
     # TODO: write output file, run UI (cli or gui)
     # (move all in ui ? can restart ...etc )
     return 0
