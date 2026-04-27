@@ -40,6 +40,9 @@ def run(config_file_path: str) -> int:
         if nbr and nbr == 1:
             config.seed = None
             maze = generate_maze(config=config)
+            if maze is None:
+                print("Error: failed to generate maze.")
+                return 1
             print(f"MAZE:\n{maze.get_debug()}\n")
 
         elif nbr and nbr == 2:
