@@ -24,8 +24,9 @@ class MazeSolver:
             current.solution_dir = dir
             current = grid.get_neighbour(current, dir)
 
-    def solve_maze(self, grid: MazeGrid) -> list[Direction] | None:
-        algo = self.algo_class(grid=grid)
+    def solve_maze(self, grid: MazeGrid,
+                   perfect: bool) -> list[Direction] | None:
+        algo = self.algo_class(grid=grid, perfect=perfect)
         solution = algo.run()
         if solution is not None:
             self.update_grid(grid=grid, solution=solution)
@@ -34,7 +35,7 @@ class MazeSolver:
 
 def solve_maze(maze: MazeGrid, config: Config) -> list[Direction] | None:
     solver = MazeSolver(algo_name=config.solve_algorithm)
-    solution = solver.solve_maze(maze)
+    solution = solver.solve_maze(maze, config.perfect)
     if solution is None:
         print("No solution found...")
     return solution

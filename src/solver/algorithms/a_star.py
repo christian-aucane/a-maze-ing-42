@@ -4,9 +4,10 @@ from src.grid import MazeGrid, MazeBox
 
 
 class AStar(SolvingAlgorithm):
-    def __init__(self, grid: MazeGrid):
-        super().__init__(grid)
+    def __init__(self, grid: MazeGrid, perfect: bool):
+        super().__init__(grid, perfect)
         start = self.grid.entry
+        self.perfect: bool = perfect
         self.open_set: set[MazeBox] = {start}
         self.closed_set: set[MazeBox] = set()
         self.g_score: dict[MazeBox, int] = {start: 0}
