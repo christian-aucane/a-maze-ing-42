@@ -43,7 +43,7 @@ class DFS(GenerationAlgorithm):
             else:
                 # cul-de-sac on recule
                 stack.pop()
-        
+
         if not self.is_perfect:
             n: int = 0
             while n <= 10:
