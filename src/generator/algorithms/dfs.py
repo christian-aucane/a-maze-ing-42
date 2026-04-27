@@ -43,5 +43,22 @@ class DFS(GenerationAlgorithm):
             else:
                 # cul-de-sac on recule
                 stack.pop()
+        
+        if not self.is_perfect:
+            n: int = 0
+            while n <= 10:
+                box = random.choice(random.choice(self.grid.grid))
+                directions = list(Direction)
+                random.shuffle(directions)
+
+                for direction in directions:
+                    try:
+                        neighbour = self.grid.get_neighbour(box, direction)
+                        if box.walls[direction]:
+                            self.grid.break_wall(box, direction)
+                            break
+                    except OutOfBoundError:
+                        pass
+                n += 1
 
         return True
