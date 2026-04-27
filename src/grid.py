@@ -262,7 +262,7 @@ class MazeGrid:
             print(
                 "\nColor not found please choise another colors\n"
                 f"Please try: "
-                f"{", ".join(key for key in COLORS_WALLS.keys())}\n")
+                f"{'', ''.join(key for key in COLORS_WALLS.keys())}\n")
             return False
 
 
