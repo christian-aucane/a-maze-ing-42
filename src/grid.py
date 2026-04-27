@@ -73,7 +73,8 @@ class MazeBox:
             wall_left = "|" if self.walls[Direction.WEST] else " "
             if self.is_on_ft_pattern:
                 return (
-                    f"{color_grid}{wall_left}{end_colors}{color_pattern}   {end_colors}"
+                    f"{color_grid}{wall_left}{end_colors}"
+                    f"{color_pattern}   {end_colors}"
                 )
             if exit is self:
                 return f"{color_grid}{wall_left} 0 {end_colors}"
@@ -117,8 +118,12 @@ class MazeGrid:
         y_correction = int(self.height % 2 == 1)
         border_width = (self.width - 7 - x_correction) // 2
         border_height = (self.height - 5 - y_correction) // 2
-        x_in_pattern = border_width < x < self.width - border_width - x_correction
-        y_in_pattern = border_height < y < self.height - border_height - y_correction
+        x_in_pattern = border_width < x < (
+            self.width - border_width - x_correction
+        )
+        y_in_pattern = border_height < y < (
+            self.height - border_height - y_correction
+        )
         if x_in_pattern and y_in_pattern:
             x_pattern = x - border_width - 1
             y_pattern = y - border_height - 1
@@ -143,7 +148,8 @@ class MazeGrid:
                         x=x,
                         y=y,
                         is_on_ft_pattern=(
-                            self._is_on_ft_pattern(x, y) if not skip_pattern else False
+                            self._is_on_ft_pattern(x, y)
+                            if not skip_pattern else False
                         ),
                     )
                     for x in range(self.width)
@@ -185,7 +191,8 @@ class MazeGrid:
 
     def get_output(self) -> str:
         output_lst = [
-            "".join(map(lambda box: box.get_output(), row)) for row in self.grid
+            "".join(map(lambda box: box.get_output(), row))
+            for row in self.grid
         ]
         return "\n".join(output_lst)
 
@@ -240,7 +247,9 @@ class MazeGrid:
     def get_box(self, x: int, y: int) -> MazeBox:
         if self._is_bounded(x, y):
             return self.grid[y][x]
-        raise OutOfBoundError(f"Grid error at (x={x}, y={y}): Box is out of bound")
+        raise OutOfBoundError(
+            f"Grid error at (x={x}, y={y}): Box is out of bound"
+        )
 
     # TODO: use generator instead of list comprehension?
     def get_boxes(self) -> list[MazeBox]:
