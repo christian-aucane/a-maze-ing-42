@@ -32,14 +32,13 @@ def run(config_file_path: str) -> int:
     print(f"SOLUTION:\n{solution}\n")
 
     nbr = input("1- Regenerate Maze: \n"
-                "2- Change walls color: \n"
-                "3- show solution from entry to exit \n")
+                "2- show solution from entry to exit: \n"
+                "3- Change walls color: \n")
 
     if nbr and nbr == 1:
         config.seed = None
         maze = generate_maze(config=config)
         print(f"MAZE:\n{maze.get_debug()}\n")
-        config 
 
     elif nbr and nbr == 2:
         solution = solve_maze(maze=maze, config=config)
@@ -47,6 +46,7 @@ def run(config_file_path: str) -> int:
 
     elif nbr and nbr == 3:
         color_change = input("input color: ")
+        print("colors: ", color_change)
         if maze.change_colors_walls(color_change):
             print(f"MAZE:\n{maze.get_debug()}\n")
 
