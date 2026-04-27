@@ -36,6 +36,7 @@ class MazeBox:
     def __init__(self, x: int, y: int, is_on_ft_pattern: bool = False) -> None:
         self.x = x
         self.y = y
+        self.id: int = 0
         self.is_on_ft_pattern = is_on_ft_pattern
         self.is_visited = False
         self.solution_dir: Direction | None = None
