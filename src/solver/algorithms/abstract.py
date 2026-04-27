@@ -4,7 +4,8 @@ from src.grid import MazeGrid
 
 
 class SolvingAlgorithm(ABC):
-    def __init__(self, grid: MazeGrid):
+    def __init__(self, grid: MazeGrid, perfect: bool):
+        self.perfect = perfect
         self.grid = grid
         self.current_box = grid.entry
 

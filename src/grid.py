@@ -25,6 +25,7 @@ class MazeBox:
     ) -> None:
         self.x = x
         self.y = y
+        self.id: int = 0
         self.is_on_ft_pattern = is_on_ft_pattern
         self.is_visited = False
         self.is_entry = is_entry
