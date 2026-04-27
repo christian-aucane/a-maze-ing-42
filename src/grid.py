@@ -54,37 +54,29 @@ class MazeBox:
         color_pattern: str,
         hide_solution: Optional[bool] = False,
         entry: Optional["MazeBox"] = None,
-        exit: Optional["MazeBox"] = None,
+        exit: Optional["MazeBox"] = None
     ) -> str:
         end_colors: str = "\033[0m"
         if direction == Direction.NORTH:
-            return (
-                f"{color_grid}+---{end_colors}"
-                if self.walls[Direction.NORTH]
-                else f"{color_grid}+   {end_colors}"
-            )
+            return (f"{color_grid}+---{end_colors}" if
+                    self.walls[Direction.NORTH] else
+                    f"{color_grid}+   {end_colors}")
         if direction == Direction.SOUTH:
-            return (
-                f"{color_grid}+---{end_colors}"
-                if self.walls[Direction.SOUTH]
-                else f"{color_grid}+   {end_colors}"
-            )
+            return (f"{color_grid}+---{end_colors}" if
+                    self.walls[Direction.SOUTH] else
+                    f"{color_grid}+   {end_colors}")
         if direction == Direction.EAST:
             wall_left = "|" if self.walls[Direction.WEST] else " "
             if self.is_on_ft_pattern:
-                return (
-                    f"{color_grid}{wall_left}{end_colors}"
-                    f"{color_pattern}   {end_colors}"
-                )
+                return (f"{color_grid}{wall_left}{end_colors}"
+                        f"{color_pattern}   {end_colors}")
             if exit is self:
                 return f"{color_grid}{wall_left} 0 {end_colors}"
             elif entry is self:
                 return f"{color_grid}{wall_left} - {end_colors}"
             elif self.solution_dir and hide_solution:
-                return (
-                    f"{color_grid}{wall_left}{end_colors} "
-                    f"{self.solution_dir.get_debug()} "
-                )
+                return (f"{color_grid}{wall_left}{end_colors} "
+                        f"{self.solution_dir.get_debug()} ")
             else:
                 return f"{color_grid}{wall_left}   {end_colors}"
         return ""
@@ -205,41 +197,24 @@ class MazeGrid:
         end_color: str = "\033[0m"
         for row in self.grid:
             line_lst: list[str] = [
-                (
-                    "".join(
-                        box.get_debug(
-                            Direction.NORTH,
-                            color_grid=self.walls_color,
-                            color_pattern=self.pattern_color,
-                        )
-                        for box in row
-                    )
-                    + f"{self.walls_color}+{end_color}"
-                ),
+                ("".join(box.get_debug(Direction.NORTH,
+                                       color_grid=self.walls_color,
+                                       color_pattern=self.pattern_color)
+                         for box in row) + f"{self.walls_color}+{end_color}"),
                 "".join(
-                    box.get_debug(
-                        Direction.EAST,
-                        color_grid=self.walls_color,
-                        color_pattern=self.pattern_color,
-                        entry=self.entry,
-                        exit=self.exit,
-                        hide_solution=self.hide_solution,
-                    )
+                    box.get_debug(Direction.EAST, color_grid=self.walls_color,
+                                  color_pattern=self.pattern_color,
+                                  entry=self.entry, exit=self.exit,
+                                  hide_solution=self.hide_solution)
                     for box in row
                 )
                 + f"{self.walls_color}|{end_color}",
             ]
             output_lst.extend(line_lst)
         end_list: list[str] = [
-            "".join(
-                box.get_debug(
-                    Direction.SOUTH,
-                    color_grid=self.walls_color,
-                    color_pattern=self.pattern_color,
-                )
-                for box in row
-            )
-            + f"{self.walls_color}+{end_color}"
+            "".join(box.get_debug(Direction.SOUTH, color_grid=self.walls_color,
+                                  color_pattern=self.pattern_color)
+                    for box in row) + f"{self.walls_color}+{end_color}"
         ]
 
         return "\n".join(output_lst + end_list)
@@ -286,8 +261,7 @@ class MazeGrid:
             print(
                 "\nColor not found please choise another colors\n"
                 f"Please try: "
-                f"{'', ''.join(key for key in COLORS_WALLS.keys())}\n"
-            )
+                f"{'', ''.join(key for key in COLORS_WALLS.keys())}\n")
             return False
 
 
