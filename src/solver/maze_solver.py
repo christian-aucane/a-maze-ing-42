@@ -1,4 +1,4 @@
-from src.grid import MazeGrid
+from src.grid import MazeGrid, MazeBox
 from src.common import Direction
 from src.config import Config
 from .algorithms import SOLVING_ALGORITHMS_CLASSES, SolvingAlgorithm
@@ -16,20 +16,20 @@ class MazeSolver:
                 f"{SOLVING_ALGORITHMS_CLASSES.keys()}"
             )
 
-    @staticmethod
-    def update_grid(grid: MazeGrid, solution: list[Direction]) -> None:
+    def _get_solution_dict(grid: MazeGrid, solution: list[Direction]) -> None:
         # TODO: catch OutOfBoundError ??
+        output = {}
         current = grid.entry
         for dir in solution:
-            current.solution_dir = dir
+            output[current] = dir
             current = grid.get_neighbour(current, dir)
+        return output
 
-    def solve_maze(self, grid: MazeGrid) -> list[Direction] | None:
+    def solve_maze(self, grid: MazeGrid) -> dict[MazeBox, Solution] | None:
         algo = self.algo_class(grid=grid)
         solution = algo.run()
         if solution is not None:
-            self.update_grid(grid=grid, solution=solution)
-        return solution
+            return _get_solution_dict(grid, solution)
 
 
 def solve_maze(maze: MazeGrid, config: Config) -> list[Direction] | None:
