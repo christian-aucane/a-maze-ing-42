@@ -259,9 +259,10 @@ class MazeGrid:
                 self.pattern_color = COLORS_PATTERN[colors].value
             return True
         except KeyError:
-            print("\nColor not found please choise another colors\n"
-                  f"Please try: {", ".join(key for key, _ in
-                                           COLORS_WALLS.items())}\n")
+            print(
+                "\nColor not found please choise another colors\n"
+                f"Please try: "
+                f"{", ".join(key for key in COLORS_WALLS.keys())}\n")
             return False
 
 
