@@ -1,5 +1,6 @@
 from typing import Optional
 from .common import Direction
+from .colors import ColorsWalls, ColorsPattern, COLORS_WALLS, COLORS_PATTERN
 
 
 class OnFtPatternError(Exception):
@@ -7,6 +8,10 @@ class OnFtPatternError(Exception):
 
 
 class OutOfBoundError(Exception):
+    pass
+
+
+class ColorNotFound(Exception):
     pass
 
 
@@ -45,25 +50,35 @@ class MazeBox:
     def get_debug(
         self,
         direction: Direction,
+        color_grid: str,
+        color_pattern: str,
+        hide_solution: Optional[bool] = False,
         entry: Optional["MazeBox"] = None,
-        exit: Optional["MazeBox"] = None,
+        exit: Optional["MazeBox"] = None
     ) -> str:
+        end_colors: str = "\033[0m"
         if direction == Direction.NORTH:
-            return "+---" if self.walls[Direction.NORTH] else "+   "
+            return (f"{color_grid}+---{end_colors}" if
+                    self.walls[Direction.NORTH] else
+                    f"{color_grid}+   {end_colors}")
         if direction == Direction.SOUTH:
-            return "+---" if self.walls[Direction.SOUTH] else "+   "
+            return (f"{color_grid}+---{end_colors}" if
+                    self.walls[Direction.SOUTH] else
+                    f"{color_grid}+   {end_colors}")
         if direction == Direction.EAST:
             wall_left = "|" if self.walls[Direction.WEST] else " "
             if self.is_on_ft_pattern:
-                return f"{wall_left} X "
+                return (f"{color_grid}{wall_left}{end_colors}"
+                        f"{color_pattern}   {end_colors}")
             if exit is self:
-                return f"{wall_left} 0 "
+                return f"{color_grid}{wall_left} 0 {end_colors}"
             elif entry is self:
-                return f"{wall_left} - "
-            elif self.solution_dir is not None:
-                return f"{wall_left} {self.solution_dir.get_debug()} "
+                return f"{color_grid}{wall_left} - {end_colors}"
+            elif self.solution_dir and hide_solution:
+                return (f"{color_grid}{wall_left}{end_colors} "
+                        f"{self.solution_dir.get_debug()} ")
             else:
-                return f"{wall_left}   "
+                return f"{color_grid}{wall_left}   {end_colors}"
         return ""
 
     def break_wall(self, direction: Direction) -> None:
@@ -160,6 +175,9 @@ class MazeGrid:
     ) -> None:
         self.width = width
         self.height = height
+        self.walls_color = ColorsWalls.WIGHT.value
+        self.pattern_color = ColorsPattern.RED.value
+        self.hide_solution: bool = True
         self.grid = self._generate_grid()
         self.entry = self.get_box(*entry)
         self.exit = self.get_box(*exit)
@@ -177,18 +195,27 @@ class MazeGrid:
 
     def get_debug(self) -> str:
         output_lst: list[str] = []
+        end_color: str = "\033[0m"
         for row in self.grid:
             line_lst: list[str] = [
-                "".join(box.get_debug(Direction.NORTH) for box in row) + "+",
+                ("".join(box.get_debug(Direction.NORTH,
+                                       color_grid=self.walls_color,
+                                       color_pattern=self.pattern_color)
+                         for box in row) + f"{self.walls_color}+{end_color}"),
                 "".join(
-                    box.get_debug(Direction.EAST, self.entry, self.exit)
+                    box.get_debug(Direction.EAST, color_grid=self.walls_color,
+                                  color_pattern=self.pattern_color,
+                                  entry=self.entry, exit=self.exit,
+                                  hide_solution=self.hide_solution)
                     for box in row
                 )
-                + "|",
+                + f"{self.walls_color}|{end_color}",
             ]
             output_lst.extend(line_lst)
         end_list: list[str] = [
-            "".join(box.get_debug(Direction.SOUTH) for box in row) + "+"
+            "".join(box.get_debug(Direction.SOUTH, color_grid=self.walls_color,
+                                  color_pattern=self.pattern_color)
+                    for box in row) + f"{self.walls_color}+{end_color}"
         ]
 
         return "\n".join(output_lst + end_list)
@@ -209,8 +236,6 @@ class MazeGrid:
             neighbour = self.get_neighbour(box, direction)
         except OutOfBoundError:
             return False
-        # if neighbour is None:
-        #     return False
         if box.is_on_ft_pattern or neighbour.is_on_ft_pattern:
             return False
         box.break_wall(direction)
@@ -225,6 +250,20 @@ class MazeGrid:
             except OutOfBoundError:
                 continue
         return neighbours
+
+    def change_colors_walls(self, colors: str, nbr: int) -> bool:
+        try:
+            if nbr == 3:
+                self.walls_color = COLORS_WALLS[colors].value
+            elif nbr == 4:
+                self.pattern_color = COLORS_PATTERN[colors].value
+            return True
+        except KeyError:
+            print(
+                "\nColor not found please choise another colors\n"
+                f"Please try: "
+                f"{'', ''.join(key for key in COLORS_WALLS.keys())}\n")
+            return False
 
 
 if __name__ == "__main__":
