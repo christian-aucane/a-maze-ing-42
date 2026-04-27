@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Colors(Enum):
+class ColorsWalls(Enum):
     WIGHT = ""
     RED = "\033[0;31m"
     GREEN = "\033[0;32m"
@@ -20,20 +20,57 @@ class Colors(Enum):
     LIGHT_WHITE = "\033[1;37m"
 
 
-COLORS: dict[str, Colors] = {
-    "wight": Colors.WIGHT,
-    "red": Colors.RED,
-    "green": Colors.GREEN,
-    "brown": Colors.BROWN,
-    "blue": Colors.BLUE,
-    "purple": Colors.PURPLE,
-    "cyan": Colors.CYAN,
-    "light_gray": Colors.LIGHT_GRAY,
-    "dark_gray": Colors.DARK_GRAY,
-    "light_red": Colors.LIGHT_RED,
-    "light_green": Colors.LIGHT_GREEN,
-    "yellow": Colors.YELLOW,
-    "light_blue": Colors.LIGHT_BLUE,
-    "light_purple": Colors.LIGHT_PURPLE,
-    "light_cyan": Colors.LIGHT_CYAN,
-    "light_white": Colors.LIGHT_WHITE}
+class ColorsPattern(Enum):
+    WIGHT = ""
+    RED = "\033[41m"
+    GREEN = "\033[42m"
+    BROWN = "\033[43m"
+    BLUE = "\033[44m"
+    PURPLE = "\033[45m"
+    CYAN = "\033[46m"
+    LIGHT_GRAY = "\033[47m"
+    DARK_GRAY = "\033[100m"
+    LIGHT_RED = "\033[101m"
+    LIGHT_GREEN = "\033[102m"
+    YELLOW = "\033[103m"
+    LIGHT_BLUE = "\033[104m"
+    LIGHT_PURPLE = "\033[105m"
+    LIGHT_CYAN = "\033[106m"
+    LIGHT_WHITE = "\033[107m"
+
+
+COLORS_WALLS: dict[str, ColorsWalls] = {
+    "wight": ColorsWalls.WIGHT,
+    "red": ColorsWalls.RED,
+    "green": ColorsWalls.GREEN,
+    "brown": ColorsWalls.BROWN,
+    "blue": ColorsWalls.BLUE,
+    "purple": ColorsWalls.PURPLE,
+    "cyan": ColorsWalls.CYAN,
+    "light_gray": ColorsWalls.LIGHT_GRAY,
+    "dark_gray": ColorsWalls.DARK_GRAY,
+    "light_red": ColorsWalls.LIGHT_RED,
+    "light_green": ColorsWalls.LIGHT_GREEN,
+    "yellow": ColorsWalls.YELLOW,
+    "light_blue": ColorsWalls.LIGHT_BLUE,
+    "light_purple": ColorsWalls.LIGHT_PURPLE,
+    "light_cyan": ColorsWalls.LIGHT_CYAN,
+    "light_white": ColorsWalls.LIGHT_WHITE}
+
+COLORS_PATTERN: dict[str, ColorsPattern] = {
+    "wight": ColorsPattern.WIGHT,
+    "red": ColorsPattern.RED,
+    "green": ColorsPattern.GREEN,
+    "brown": ColorsPattern.BROWN,
+    "blue": ColorsPattern.BLUE,
+    "purple": ColorsPattern.PURPLE,
+    "cyan": ColorsPattern.CYAN,
+    "light_gray": ColorsPattern.LIGHT_GRAY,
+    "dark_gray": ColorsPattern.DARK_GRAY,
+    "light_red": ColorsPattern.LIGHT_RED,
+    "light_green": ColorsPattern.LIGHT_GREEN,
+    "yellow": ColorsPattern.YELLOW,
+    "light_blue": ColorsPattern.LIGHT_BLUE,
+    "light_purple": ColorsPattern.LIGHT_PURPLE,
+    "light_cyan": ColorsPattern.LIGHT_CYAN,
+    "light_white": ColorsPattern.LIGHT_WHITE}

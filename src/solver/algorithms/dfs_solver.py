@@ -44,7 +44,4 @@ class DFSSolver(SolvingAlgorithm):
                 if solutions:
                     solutions.pop()
 
-        print("solutions: ", solutions)
-        print("stack: ", stack)
-
         return solutions
