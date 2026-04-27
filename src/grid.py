@@ -33,11 +33,20 @@ class MazeBox:
         hex_values = "0123456789ABCDEF"
         return hex_values[int(self._get_bin(), 2)]
 
-    def __init__(self, x: int, y: int, is_on_ft_pattern: bool = False) -> None:
+    def __init__(
+        self,
+        x: int,
+        y: int,
+        is_on_ft_pattern: bool = False,
+        is_entry: bool = False,
+        is_exit=False,
+    ) -> None:
         self.x = x
         self.y = y
         self.is_on_ft_pattern = is_on_ft_pattern
         self.is_visited = False
+        self.is_entry = is_entry
+        self.is_exit = is_exit
         self.solution_dir: Direction | None = None
         self.walls = self._generate_walls()
 
@@ -46,40 +55,6 @@ class MazeBox:
 
     def get_output(self) -> str:
         return self._get_hexa()
-
-    def get_debug(
-        self,
-        direction: Direction,
-        color_grid: str,
-        color_pattern: str,
-        hide_solution: Optional[bool] = False,
-        entry: Optional["MazeBox"] = None,
-        exit: Optional["MazeBox"] = None
-    ) -> str:
-        end_colors: str = "\033[0m"
-        if direction == Direction.NORTH:
-            return (f"{color_grid}+---{end_colors}" if
-                    self.walls[Direction.NORTH] else
-                    f"{color_grid}+   {end_colors}")
-        if direction == Direction.SOUTH:
-            return (f"{color_grid}+---{end_colors}" if
-                    self.walls[Direction.SOUTH] else
-                    f"{color_grid}+   {end_colors}")
-        if direction == Direction.EAST:
-            wall_left = "|" if self.walls[Direction.WEST] else " "
-            if self.is_on_ft_pattern:
-                return (f"{color_grid}{wall_left}{end_colors}"
-                        f"{color_pattern}   {end_colors}")
-            if exit is self:
-                return f"{color_grid}{wall_left} 0 {end_colors}"
-            elif entry is self:
-                return f"{color_grid}{wall_left} - {end_colors}"
-            elif self.solution_dir and hide_solution:
-                return (f"{color_grid}{wall_left}{end_colors} "
-                        f"{self.solution_dir.get_debug()} ")
-            else:
-                return f"{color_grid}{wall_left}   {end_colors}"
-        return ""
 
     def break_wall(self, direction: Direction) -> None:
         self.walls[direction] = False
@@ -110,12 +85,8 @@ class MazeGrid:
         y_correction = int(self.height % 2 == 1)
         border_width = (self.width - 7 - x_correction) // 2
         border_height = (self.height - 5 - y_correction) // 2
-        x_in_pattern = (
-            border_width < x < self.width - border_width - x_correction
-        )
-        y_in_pattern = (
-            border_height < y < self.height - border_height - y_correction
-        )
+        x_in_pattern = border_width < x < self.width - border_width - x_correction
+        y_in_pattern = border_height < y < self.height - border_height - y_correction
         if x_in_pattern and y_in_pattern:
             x_pattern = x - border_width - 1
             y_pattern = y - border_height - 1
@@ -123,7 +94,9 @@ class MazeGrid:
                 return True
         return False
 
-    def _generate_grid(self) -> list[list[MazeBox]]:
+    def _generate_grid(
+        self, entry: tuple[int, int], exit: tuple[int, int]
+    ) -> list[list[MazeBox]]:
         grid = []
         skip_pattern = self.width < 9 or self.height < 7
         if skip_pattern:
@@ -134,20 +107,20 @@ class MazeGrid:
                 "Minimum width required = 9, Mimimum height required = 7"
             )
         for y in range(self.height):
-            grid.append(
-                [
+            row = []
+            for x in range(self.width):
+                row.append(
                     MazeBox(
                         x=x,
                         y=y,
-                        is_on_ft_pattern=(
-                            self._is_on_ft_pattern(x, y)
-                            if not skip_pattern
-                            else False
-                        ),
+                        is_on_ft_pattern=self._is_on_ft_pattern(x, y)
+                        if not skip_pattern
+                        else False,
+                        is_entry=(x, y) == entry,
+                        is_exit=(x, y) == exit,
                     )
-                    for x in range(self.width)
-                ]
-            )
+                )
+            grid.append(row)
         return grid
 
     def get_neighbour(self, box: MazeBox, direction: Direction) -> MazeBox:
@@ -175,57 +148,23 @@ class MazeGrid:
     ) -> None:
         self.width = width
         self.height = height
-        self.walls_color = ColorsWalls.WIGHT.value
+        self.walls_color = ColorsWalls.WHITE.value
         self.pattern_color = ColorsPattern.RED.value
         self.hide_solution: bool = True
-        self.grid = self._generate_grid()
+        self.grid = self._generate_grid(entry, exit)
         self.entry = self.get_box(*entry)
         self.exit = self.get_box(*exit)
 
     def get_output(self) -> str:
         output_lst = [
-            "".join(map(lambda box: box.get_output(), row))
-            for row in self.grid
+            "".join(map(lambda box: box.get_output(), row)) for row in self.grid
         ]
         return "\n".join(output_lst)
-
-    # -------------------
-    # afficher la Grid
-    # -------------------
-
-    def get_debug(self) -> str:
-        output_lst: list[str] = []
-        end_color: str = "\033[0m"
-        for row in self.grid:
-            line_lst: list[str] = [
-                ("".join(box.get_debug(Direction.NORTH,
-                                       color_grid=self.walls_color,
-                                       color_pattern=self.pattern_color)
-                         for box in row) + f"{self.walls_color}+{end_color}"),
-                "".join(
-                    box.get_debug(Direction.EAST, color_grid=self.walls_color,
-                                  color_pattern=self.pattern_color,
-                                  entry=self.entry, exit=self.exit,
-                                  hide_solution=self.hide_solution)
-                    for box in row
-                )
-                + f"{self.walls_color}|{end_color}",
-            ]
-            output_lst.extend(line_lst)
-        end_list: list[str] = [
-            "".join(box.get_debug(Direction.SOUTH, color_grid=self.walls_color,
-                                  color_pattern=self.pattern_color)
-                    for box in row) + f"{self.walls_color}+{end_color}"
-        ]
-
-        return "\n".join(output_lst + end_list)
 
     def get_box(self, x: int, y: int) -> MazeBox:
         if self._is_bounded(x, y):
             return self.grid[y][x]
-        raise OutOfBoundError(
-            f"Grid error at (x={x}, y={y}): Box is out of bound"
-        )
+        raise OutOfBoundError(f"Grid error at (x={x}, y={y}): Box is out of bound")
 
     # TODO: use generator instead of list comprehension?
     def get_boxes(self) -> list[MazeBox]:
@@ -262,7 +201,8 @@ class MazeGrid:
             print(
                 "\nColor not found please choise another colors\n"
                 f"Please try: "
-                f"{'', ''.join(key for key in COLORS_WALLS.keys())}\n")
+                f"{'', ''.join(key for key in COLORS_WALLS.keys())}\n"
+            )
             return False
 
 
