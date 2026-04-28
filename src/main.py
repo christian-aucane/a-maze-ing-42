@@ -32,7 +32,7 @@ def run(config_file_path: str) -> int:
     # print(f"SOLUTION:\n{solution}\n")
 
     while 1:
-        nbr = int(input("\n1- Regenerate Maze: \n"
+        nbr = int(input("1- Regenerate Maze: \n"
                         "2- show and hide solution from entry to exit: \n"
                         "3- Change walls color: \n"
                         "4- change pattern color: \n"))
@@ -40,6 +40,9 @@ def run(config_file_path: str) -> int:
         if nbr and nbr == 1:
             config.seed = None
             maze = generate_maze(config=config)
+            if maze is None:
+                print("Error: failed to generate maze.")
+                return 1
             print(f"MAZE:\n{maze.get_debug()}\n")
 
         elif nbr and nbr == 2:
@@ -56,23 +59,15 @@ def run(config_file_path: str) -> int:
                 maze.hide_solution = True
 
         elif nbr and nbr == 3:
-            while 1:
-                color = input("input color or exit: ")
-                if color == "exit":
-                    break
-                if maze.change_colors_walls(color, nbr):
-                    print(f"MAZE:\n{maze.get_debug()}\n")
-                    break
+            color = input("input color: ")
+            if maze.change_colors_walls(color, nbr):
+                print(f"MAZE:\n{maze.get_debug()}\n")
 
         elif nbr and nbr == 4:
-            while 1:
-                color = input("input color or exit: ")
-                if color == "exit":
-                    break
-                if maze.change_colors_walls(color, nbr):
-                    print(f"MAZE:\n{maze.get_debug()}\n")
-                    break
-    
+            color = input("input color: ")
+            if maze.change_colors_walls(color, nbr):
+                print(f"MAZE:\n{maze.get_debug()}\n")
+
             # TODO: write output file, run UI (cli or gui)
             # (move all in ui ? can restart ...etc )
     return 0
