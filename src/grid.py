@@ -1,4 +1,3 @@
-from typing import Optional
 from .common import Direction
 from .colors import ColorsWalls, ColorsPattern, COLORS_WALLS, COLORS_PATTERN
 
@@ -16,15 +15,6 @@ class ColorNotFound(Exception):
 
 
 class MazeBox:
-    @staticmethod
-    def _generate_walls() -> dict[Direction, bool]:
-        return {
-            Direction.NORTH: True,
-            Direction.EAST: True,
-            Direction.SOUTH: True,
-            Direction.WEST: True,
-        }
-
     def _get_bin(self) -> str:
         bin_lst = [f"{int(self.walls[dir])}" for dir in list(Direction)]
         return "".join(bin_lst)
@@ -47,8 +37,7 @@ class MazeBox:
         self.is_visited = False
         self.is_entry = is_entry
         self.is_exit = is_exit
-        self.solution_dir: Direction | None = None
-        self.walls = self._generate_walls()
+        self.walls = {direction: True for direction in Direction}
 
     def __str__(self) -> str:
         return f"Box(x={self.x}, y={self.y}, walls_bin={self._get_bin()})"
