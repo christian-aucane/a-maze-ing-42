@@ -47,12 +47,17 @@ class AsciiRenderer:
             return f"{self.walls_color}{wall_left} - {self.END_COLOR}"
         elif self.display_solution and solution_dir is not None:
             return (
-                f"{self.walls_color}{wall_left}{self.END_COLOR} {solution_dir} "
+                f"{self.walls_color}{wall_left}"
+                f"{self.END_COLOR} {solution_dir} "
             )
         else:
             return f"{self.walls_color}{wall_left}   {self.END_COLOR}"
 
-    def render(self, maze: MazeGrid, solution: dict[MazeBox, Direction]) -> str:
+    def render(
+        self,
+        maze: MazeGrid,
+        solution: dict[MazeBox, Direction]
+    ) -> str:
         output_lst: list[str] = []
         for row in maze.iterrows():
             output_lst.append(

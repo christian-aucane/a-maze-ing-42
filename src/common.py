@@ -8,7 +8,12 @@ class Direction(Enum):
     WEST = (-1, 0)
 
     def __str__(self) -> str:
-        return {"NORTH": "↑", "SOUTH": "↓", "EAST": "→", "WEST": "←"}[self.name]
+        return {
+            "NORTH": "↑",
+            "SOUTH": "↓",
+            "EAST": "→",
+            "WEST": "←"
+        }[self.name]
 
     def get_oposite(self) -> "Direction":
         return {

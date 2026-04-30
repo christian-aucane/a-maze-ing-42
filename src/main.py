@@ -29,11 +29,15 @@ def gen_and_solve_maze(
 def write_output_file(
     config: Config, maze: MazeGrid, solution: dict[MazeBox, Direction]
 ) -> None:
+    solution_str = ''.join(
+        direction.get_output()
+        for direction in solution.values()
+    )
     with open(config.output_file, "w") as f:
         f.write(
             f"{maze.get_output()}\n\n"
             f"{config.get_entry_output()}\n{config.get_exit_output()}\n"
-            f"{''.join(direction.get_output() for direction in solution.values())}"
+            f"{solution_str}"
         )
 
 
