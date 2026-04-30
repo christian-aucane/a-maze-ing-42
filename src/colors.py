@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class ColorsWalls(Enum):
-    WIGHT = ""
+    WHITE = ""
     RED = "\033[0;31m"
     GREEN = "\033[0;32m"
     BROWN = "\033[0;33m"
@@ -21,7 +21,7 @@ class ColorsWalls(Enum):
 
 
 class ColorsPattern(Enum):
-    WIGHT = ""
+    WHITE = ""
     RED = "\033[41m"
     GREEN = "\033[42m"
     BROWN = "\033[43m"
@@ -40,7 +40,7 @@ class ColorsPattern(Enum):
 
 
 COLORS_WALLS: dict[str, ColorsWalls] = {
-    "wight": ColorsWalls.WIGHT,
+    "white": ColorsWalls.WHITE,
     "red": ColorsWalls.RED,
     "green": ColorsWalls.GREEN,
     "brown": ColorsWalls.BROWN,
@@ -55,10 +55,11 @@ COLORS_WALLS: dict[str, ColorsWalls] = {
     "light_blue": ColorsWalls.LIGHT_BLUE,
     "light_purple": ColorsWalls.LIGHT_PURPLE,
     "light_cyan": ColorsWalls.LIGHT_CYAN,
-    "light_white": ColorsWalls.LIGHT_WHITE}
+    "light_white": ColorsWalls.LIGHT_WHITE,
+}
 
 COLORS_PATTERN: dict[str, ColorsPattern] = {
-    "wight": ColorsPattern.WIGHT,
+    "white": ColorsPattern.WHITE,
     "red": ColorsPattern.RED,
     "green": ColorsPattern.GREEN,
     "brown": ColorsPattern.BROWN,
@@ -73,4 +74,5 @@ COLORS_PATTERN: dict[str, ColorsPattern] = {
     "light_blue": ColorsPattern.LIGHT_BLUE,
     "light_purple": ColorsPattern.LIGHT_PURPLE,
     "light_cyan": ColorsPattern.LIGHT_CYAN,
-    "light_white": ColorsPattern.LIGHT_WHITE}
+    "light_white": ColorsPattern.LIGHT_WHITE,
+}

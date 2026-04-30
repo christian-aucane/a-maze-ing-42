@@ -44,6 +44,12 @@ class Config(BaseModel):
             raise ValueError("the Entry value greater than the size of grid")
         return self
 
+    def get_entry_output(self) -> str:
+        return f"{self.entry[0]},{self.entry[1]}"
+
+    def get_exit_output(self) -> str:
+        return f"{self.exit[0]},{self.exit[1]}"
+
 
 def parse_config_file(config_file_path: str) -> Config | None:
     """Parse config data."""
@@ -51,8 +57,9 @@ def parse_config_file(config_file_path: str) -> Config | None:
     try:
         with open(config_file_path, "r") as f:
             if not f:
-                raise FileNotFoundError(f"Config file '{config_file_path}'"
-                                        " doesn't exist...")
+                raise FileNotFoundError(
+                    f"Config file '{config_file_path}' doesn't exist..."
+                )
             for line in f:
                 line = line.strip()
                 if not line or line.startswith("#"):
