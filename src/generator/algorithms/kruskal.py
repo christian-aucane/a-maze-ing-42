@@ -47,7 +47,7 @@ class Kruskal(GenerationAlgorithm):
                 if not self.is_perfect:
                     if random.random() <= 0.1:
                         self.grid.break_wall(cell_a, dir)
-                        continue
+                    continue
             self.union(cell_a, cell_b)
             self.grid.break_wall(cell_a, dir)
 
