@@ -47,7 +47,7 @@ class DFS(GenerationAlgorithm):
         if not self.is_perfect:
             n: int = 0
             while n <= 10:
-                box = random.choice(random.choice(self.grid.grid))
+                box = random.choice(self.grid.get_boxes())
                 directions = list(Direction)
                 random.shuffle(directions)
 

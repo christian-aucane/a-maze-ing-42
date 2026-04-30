@@ -1,18 +1,17 @@
 from .abstract import SolvingAlgorithm
 from src.common import Direction
-from src.grid import MazeBox, MazeGrid
+from src.grid import MazeBox
 
 
 from src.grid import OutOfBoundError
 
 
-class DFSSolver(SolvingAlgorithm):
+class BFS(SolvingAlgorithm):
     def run(self) -> list[Direction]:
 
         # remetre les cellu non visité
-        for row in self.grid.grid:
-            for box in row:
-                box.is_visited = False
+        for box in self.grid.get_boxes():
+            box.is_visited = False
         self.grid.entry.id = 1
         self.grid.entry.is_visited = True
         queue: list[MazeBox] = [self.grid.entry]

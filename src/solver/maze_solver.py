@@ -39,7 +39,7 @@ def solve_maze(
     maze: MazeGrid, config: Config
 ) -> dict[MazeBox, Direction] | None:
     solver = MazeSolver(algo_name=config.solve_algorithm)
-    solution = solver.solve_maze(maze, config.perfect)
+    solution = solver.solve_maze(maze)
     if solution is None:
         print("No solution found...")
     return solution
