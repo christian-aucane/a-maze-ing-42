@@ -50,7 +50,7 @@ def run(config_file_path: str) -> int:
     renderer = AsciiRenderer()
     running = True
     while running:
-        print(renderer.render(maze=maze, solution=solution))
+        print(renderer.render(maze=maze, solution=solution))  # type: ignore
         choice = input(
             "1- Regenerate Maze: \n"
             "2- show and hide solution from entry to exit: \n"
@@ -82,6 +82,6 @@ def run(config_file_path: str) -> int:
         else:
             print("Type a valid option...")
 
-    write_output_file(config, maze, solution)
+    write_output_file(config, maze, solution)  # type: ignore
     print("Good bye!")
     return 0
