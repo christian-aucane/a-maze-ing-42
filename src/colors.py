@@ -40,7 +40,7 @@ class ColorsPattern(Enum):
 
 
 COLORS_WALLS: dict[str, ColorsWalls] = {
-    "wight": ColorsWalls.WHITE,
+    "white": ColorsWalls.WHITE,
     "red": ColorsWalls.RED,
     "green": ColorsWalls.GREEN,
     "brown": ColorsWalls.BROWN,
@@ -59,7 +59,7 @@ COLORS_WALLS: dict[str, ColorsWalls] = {
 }
 
 COLORS_PATTERN: dict[str, ColorsPattern] = {
-    "wight": ColorsPattern.WHITE,
+    "white": ColorsPattern.WHITE,
     "red": ColorsPattern.RED,
     "green": ColorsPattern.GREEN,
     "brown": ColorsPattern.BROWN,
