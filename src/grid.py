@@ -1,9 +1,5 @@
+from typing import Generator
 from .common import Direction
-from .colors import ColorsWalls, ColorsPattern
-
-
-class OnFtPatternError(Exception):
-    pass
 
 
 class OutOfBoundError(Exception):
@@ -25,7 +21,7 @@ class MazeBox:
         y: int,
         is_on_ft_pattern: bool = False,
         is_entry: bool = False,
-        is_exit=False,
+        is_exit: bool = False,
     ) -> None:
         self.x = x
         self.y = y
@@ -147,9 +143,9 @@ class MazeGrid:
     def exit(self) -> MazeBox:
         return self._exit
 
-    def iterrows(self):
+    def iterrows(self) -> Generator[list[MazeBox]]:
         for row in self._grid:
-            yield row
+            yield row[:]
 
     def get_output(self) -> str:
         output_lst = [
@@ -187,12 +183,3 @@ class MazeGrid:
             except OutOfBoundError:
                 continue
         return neighbours
-
-
-if __name__ == "__main__":
-    grid = MazeGrid(20, 10, (0, 0), (14, 9))
-    print(f"grid before:\n{grid.get_debug()}")
-    for box in grid.get_boxes():
-        for dir in Direction:
-            grid.break_wall(box, dir)
-    print(f"grid after:\n{grid.get_debug()}")

@@ -17,3 +17,6 @@ class Direction(Enum):
             Direction.EAST: Direction.WEST,
             Direction.WEST: Direction.EAST,
         }[self]
+
+    def get_output(self) -> str:
+        return self.name[0]

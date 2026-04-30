@@ -18,8 +18,8 @@ class MazeSolver:
 
     @staticmethod
     def _get_solution_dict(
-        grid: MazeGrid, solution: dict[MazeBox, Direction]
-    ) -> None:
+        grid: MazeGrid, solution: list[Direction]
+    ) -> dict[MazeBox, Direction]:
         # TODO: catch OutOfBoundError ??
         output = {}
         current = grid.entry

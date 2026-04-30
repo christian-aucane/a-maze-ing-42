@@ -7,31 +7,33 @@ class AsciiRenderer:
     END_COLOR = "\033[0m"
 
     def __init__(
-        self, walls_color=ColorsWalls.WHITE, pattern_color=ColorsPattern.RED
-    ):
+        self,
+        walls_color: ColorsWalls = ColorsWalls.WHITE,
+        pattern_color: ColorsPattern = ColorsPattern.RED,
+    ) -> None:
         self.walls_color = walls_color.value
         self.pattern_color = pattern_color.value
         self.display_solution = False
 
-    def toggle_display_solution(self):
+    def toggle_display_solution(self) -> None:
         self.display_solution = not self.display_solution
 
-    def get_north_wall(self, cell: MazeBox):
+    def _get_north_wall(self, cell: MazeBox) -> str:
         return (
             f"{self.walls_color}+---{self.END_COLOR}"
             if cell.walls[Direction.NORTH]
             else f"{self.walls_color}+   {self.END_COLOR}"
         )
 
-    def get_south_wall(self, cell: MazeBox):
+    def _get_south_wall(self, cell: MazeBox) -> str:
         return (
             f"{self.walls_color}+---{self.END_COLOR}"
             if cell.walls[Direction.SOUTH]
             else f"{self.walls_color}+   {self.END_COLOR}"
         )
 
-    def get_cell_center(
-        self, cell: MazeGrid, solution_dir: Direction | None = None
+    def _get_cell_center(
+        self, cell: MazeBox, solution_dir: Direction | None = None
     ) -> str:
         wall_left = "|" if cell.walls[Direction.WEST] else " "
         if cell.is_on_ft_pattern:
@@ -54,13 +56,13 @@ class AsciiRenderer:
         output_lst: list[str] = []
         for row in maze.iterrows():
             output_lst.append(
-                "".join(self.get_north_wall(cell) for cell in row)
+                "".join(self._get_north_wall(cell) for cell in row)
                 + f"{self.walls_color}+{self.END_COLOR}"
             )
 
             output_lst.append(
                 "".join(
-                    self.get_cell_center(
+                    self._get_cell_center(
                         cell=cell, solution_dir=solution.get(cell)
                     )
                     for cell in row
@@ -68,7 +70,7 @@ class AsciiRenderer:
                 + f"{self.walls_color}|{self.END_COLOR}"
             )
         output_lst.append(
-            "".join(self.get_south_wall(cell) for cell in row)
+            "".join(self._get_south_wall(cell) for cell in row)
             + f"{self.walls_color}+{self.END_COLOR}"
         )
 

@@ -59,12 +59,3 @@ def generate_maze(config: Config) -> MazeGrid | None:
         print("Error durring maze generation...")
         return None
     return grid
-
-
-if __name__ == "__main__":
-    generator = MazeGenerator(algo_name="test")
-    maze = generator.generate_maze(
-        size=(40, 15), entry=(0, 0), exit=(14, 14), is_perfect=True
-    )
-    if maze is not None:
-        print(f"maze:\n{maze.get_debug()}")

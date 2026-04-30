@@ -9,7 +9,7 @@ from src.grid import OutOfBoundError
 class DFSSolver(SolvingAlgorithm):
     def run(self) -> list[Direction]:
         # pile du chemin
-        for row in self.grid.grid:
+        for row in self.grid.iterrows():
             for box in row:
                 box.is_visited = False
 

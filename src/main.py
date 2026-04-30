@@ -1,5 +1,3 @@
-import random
-
 from .config import parse_config_file
 from .generator.maze_generator import generate_maze
 from .solver.maze_solver import solve_maze
@@ -10,7 +8,9 @@ from .grid import MazeGrid, MazeBox
 from .common import Direction
 
 
-def gen_and_solve_maze(config: Config) -> (MazeGrid, dict[MazeBox, Direction]):
+def gen_and_solve_maze(
+    config: Config,
+) -> tuple[MazeGrid, dict[MazeBox, Direction]] | tuple[None, None]:
     # Generate maze
     maze = generate_maze(config=config)
     if maze is None:
@@ -26,8 +26,18 @@ def gen_and_solve_maze(config: Config) -> (MazeGrid, dict[MazeBox, Direction]):
     return maze, solution
 
 
+def write_output_file(
+    config: Config, maze: MazeGrid, solution: dict[MazeBox, Direction]
+) -> None:
+    with open(config.output_file, "w") as f:
+        f.write(
+            f"{maze.get_output()}\n\n"
+            f"{config.get_entry_output()}\n{config.get_exit_output()}\n"
+            f"{''.join(direction.get_output() for direction in solution.values())}"
+        )
+
+
 def run(config_file_path: str) -> int:
-    # Parse configuration
     config = parse_config_file(config_file_path=config_file_path)
     if config is None:
         print("Error: failed to parse config file.")
@@ -65,9 +75,13 @@ def run(config_file_path: str) -> int:
         elif choice == "4":
             color = input("input color: ")
             renderer.pattern_color = COLORS_PATTERN[color].value
+
         elif choice == "5":
             running = False
+
         else:
             print("Type a valid option...")
 
+    write_output_file(config, maze, solution)
+    print("Good bye!")
     return 0
