@@ -1,4 +1,5 @@
 from typing import Optional
+import random
 
 from src.grid import MazeGrid
 from src.config import Config
@@ -46,6 +47,7 @@ def generate_maze(config: Config) -> MazeGrid | None:
     except ValueError:
         print("Error durring generator instanciation...")
         return None
+    random.seed(config.seed)
 
     grid = generator.generate_maze(
         size=(config.width, config.height),
