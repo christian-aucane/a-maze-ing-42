@@ -13,8 +13,6 @@ def run(config_file_path: str) -> int:
     if config is None:
         print("Error: failed to parse config file.")
         return 1
-    if config.seed is not None:
-        random.seed(config.seed)
 
     # Generate maze
     maze = generate_maze(config=config)
@@ -35,6 +33,8 @@ def run(config_file_path: str) -> int:
     # print(f"SOLUTION:\n{solution}\n")
 
     while True:
+        if config.seed is not None:
+            random.seed(config.seed)
         nbr = int(
             input(
                 "1- Regenerate Maze: \n"
@@ -54,17 +54,17 @@ def run(config_file_path: str) -> int:
 
         elif nbr and nbr == 2:
             renderer.toggle_display_solution()
-            print(f"MAZE: {renderer.render(maze=maze, solution=solution)}")
+            print(f"MAZE:\n{renderer.render(maze=maze, solution=solution)}")
 
         elif nbr and nbr == 3:
             color = input("input color: ")
             renderer.walls_color = COLORS_WALLS[color].value
-            print(f"MAZE: {renderer.render(maze=maze, solution=solution)}")
+            print(f"MAZE:\n{renderer.render(maze=maze, solution=solution)}")
 
         elif nbr and nbr == 4:
             color = input("input color: ")
             renderer.pattern_color = COLORS_PATTERN[color].value
-            print(f"MAZE: {renderer.render(maze=maze, solution=solution)}")
+            print(f"MAZE:\n{renderer.render(maze=maze, solution=solution)}")
 
             # TODO: write output file, run UI (cli or gui)
             # (move all in ui ? can restart ...etc )

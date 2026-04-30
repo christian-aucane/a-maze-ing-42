@@ -17,7 +17,9 @@ class MazeSolver:
             )
 
     @staticmethod
-    def _get_solution_dict(grid: MazeGrid, solution: list[Direction]) -> None:
+    def _get_solution_dict(
+        grid: MazeGrid, solution: dict[MazeBox, Direction]
+    ) -> None:
         # TODO: catch OutOfBoundError ??
         output = {}
         current = grid.entry
@@ -33,7 +35,9 @@ class MazeSolver:
             return self._get_solution_dict(grid, solution)
 
 
-def solve_maze(maze: MazeGrid, config: Config) -> list[Direction] | None:
+def solve_maze(
+    maze: MazeGrid, config: Config
+) -> dict[MazeBox, Direction] | None:
     solver = MazeSolver(algo_name=config.solve_algorithm)
     solution = solver.solve_maze(maze)
     if solution is None:
