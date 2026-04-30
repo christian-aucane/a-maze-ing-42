@@ -3,8 +3,27 @@ import random
 from .config import parse_config_file
 from .generator.maze_generator import generate_maze
 from .solver.maze_solver import solve_maze
+from .config import Config
 from .render import AsciiRenderer
 from .colors import COLORS_WALLS, COLORS_PATTERN
+from .grid import MazeGrid, MazeBox
+from .common import Direction
+
+
+def gen_and_solve_maze(config: Config) -> (MazeGrid, dict[MazeBox, Direction]):
+    # Generate maze
+    maze = generate_maze(config=config)
+    if maze is None:
+        print("Error: failed to generate maze.")
+        return None, None
+
+    # Solve maze
+    solution = solve_maze(maze=maze, config=config)
+    if solution is None:
+        print("Error: failed to solve maze.")
+        return None, None
+
+    return maze, solution
 
 
 def run(config_file_path: str) -> int:
@@ -14,58 +33,41 @@ def run(config_file_path: str) -> int:
         print("Error: failed to parse config file.")
         return 1
 
-    # Generate maze
-    maze = generate_maze(config=config)
-    if maze is None:
-        print("Error: failed to generate maze.")
-        return 1
-
-    # Solve maze
-    solution = solve_maze(maze=maze, config=config)
-    if solution is None:
-        print("Error: failed to solve maze.")
+    maze, solution = gen_and_solve_maze(config)
+    if maze is None and solution is None:
         return 1
 
     renderer = AsciiRenderer()
-    # Print for debug
-    print(f"CONFIG:\n{config}\n")
-    print(f"MAZE:\n{renderer.render(maze, solution)}\n")
-    # print(f"SOLUTION:\n{solution}\n")
-
-    while True:
-        if config.seed is not None:
-            random.seed(config.seed)
-        nbr = int(
-            input(
-                "1- Regenerate Maze: \n"
-                "2- show and hide solution from entry to exit: \n"
-                "3- Change walls color: \n"
-                "4- change pattern color: \n"
-            )
+    running = True
+    while running:
+        print(renderer.render(maze=maze, solution=solution))
+        choice = input(
+            "1- Regenerate Maze: \n"
+            "2- show and hide solution from entry to exit: \n"
+            "3- Change walls color: \n"
+            "4- change pattern color: \n"
+            "5- quit\n"
+            "Choice : "
         )
 
-        if nbr and nbr == 1:
-            maze = generate_maze(config=config)
-            if maze is None:
-                print("Error: failed to generate maze.")
+        if choice == "1":
+            maze, solution = gen_and_solve_maze(config)
+            if maze is None and solution is None:
                 return 1
-            solution = solve_maze(maze=maze, config=config)
-            print(f"MAZE:\n{renderer.render(maze=maze, solution=solution)}\n")
 
-        elif nbr and nbr == 2:
+        elif choice == "2":
             renderer.toggle_display_solution()
-            print(f"MAZE:\n{renderer.render(maze=maze, solution=solution)}")
 
-        elif nbr and nbr == 3:
+        elif choice == "3":
             color = input("input color: ")
             renderer.walls_color = COLORS_WALLS[color].value
-            print(f"MAZE:\n{renderer.render(maze=maze, solution=solution)}")
 
-        elif nbr and nbr == 4:
+        elif choice == "4":
             color = input("input color: ")
             renderer.pattern_color = COLORS_PATTERN[color].value
-            print(f"MAZE:\n{renderer.render(maze=maze, solution=solution)}")
+        elif choice == "5":
+            running = False
+        else:
+            print("Type a valid option...")
 
-            # TODO: write output file, run UI (cli or gui)
-            # (move all in ui ? can restart ...etc )
     return 0
