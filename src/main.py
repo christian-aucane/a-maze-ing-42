@@ -6,6 +6,8 @@ from .render import AsciiRenderer
 from .colors import COLORS_WALLS, COLORS_PATTERN
 from .grid import MazeGrid, MazeBox
 from .common import Direction
+from typing import Generator
+import time
 
 
 def gen_and_solve_maze(
@@ -41,6 +43,16 @@ def write_output_file(
         )
 
 
+def itter_solution(solutions: dict[MazeBox, Direction]
+                   ) -> Generator[tuple[MazeBox, Direction], None, None]:
+    for cell, solution in solutions.items():
+        yield (cell, solution)
+
+
+def clear_terminal() -> None:
+    print("\033[H\033[J", end="")
+
+
 def run(config_file_path: str) -> int:
     config = parse_config_file(config_file_path=config_file_path)
     if config is None:
@@ -48,13 +60,27 @@ def run(config_file_path: str) -> int:
         return 1
 
     maze, solution = gen_and_solve_maze(config)
-    if maze is None and solution is None:
+    if maze is None:
+        print("Error: failed to generate maze.")
+        return 1
+    if solution is None:
+        print("Error: failed to solve maze.")
         return 1
 
     renderer = AsciiRenderer()
     running = True
-    while running:
-        print(renderer.render(maze=maze, solution=solution))  # type: ignore
+
+    while running and maze and solution:
+        print(renderer.render(maze=maze, solution=solution))
+        if renderer.display_solution:
+            solutions: dict[MazeBox, Direction] = {}
+            for s in itter_solution(solution):
+                cell, direction = s
+                solutions[cell] = direction
+                clear_terminal()
+                print(renderer.render(maze=maze, solution=solutions))
+                time.sleep(0.2)
+        # print(renderer.render(maze=maze, solution=solution))
         choice = input(
             "1- Regenerate Maze: \n"
             "2- show and hide solution from entry to exit: \n"

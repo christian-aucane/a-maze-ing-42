@@ -144,7 +144,7 @@ class MazeGrid:
     def exit(self) -> MazeBox:
         return self._exit
 
-    def iterrows(self) -> Generator[list[MazeBox]]:
+    def iterrows(self) -> Generator[list[MazeBox], None, None]:
         for row in self._grid:
             yield row[:]
 
