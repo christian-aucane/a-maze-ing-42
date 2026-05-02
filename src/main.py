@@ -82,6 +82,7 @@ def run(config_file_path: str) -> int:
                 time.sleep(0.2)
         # print(renderer.render(maze=maze, solution=solution))
         choice = input(
+            "==== A_MAZE_ING ====\n"
             "1- Regenerate Maze: \n"
             "2- show and hide solution from entry to exit: \n"
             "3- Change walls color: \n"
