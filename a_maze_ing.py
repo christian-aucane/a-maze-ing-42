@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
-from .src import run
+from src.main import run
 
 
 def main() -> None:

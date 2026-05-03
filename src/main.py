@@ -1,6 +1,5 @@
-from .config import parse_config_file
 from mazegen import MazeGenerator, MazeGrid, MazeBox, Direction
-from .config import Config
+from .config import Config, parse_config_file
 from .render import AsciiRenderer
 from .colors import COLORS_WALLS, COLORS_PATTERN
 from typing import Generator
