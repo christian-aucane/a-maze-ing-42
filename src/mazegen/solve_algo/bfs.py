@@ -1,9 +1,6 @@
 from .abstract import SolvingAlgorithm
-from src.common import Direction
-from src.grid import MazeBox
-
-
-from src.grid import OutOfBoundError
+from ..common import Direction
+from ..grid import MazeBox, OutOfBoundError
 
 
 class BFS(SolvingAlgorithm):
@@ -32,23 +29,27 @@ class BFS(SolvingAlgorithm):
                             pass
             queue = neighbours
         current = self.grid.exit
-        print("current: ", current)
-        neighbours_rev: list[MazeBox] = []
         solution: list[Direction] = []
+
         while current != self.grid.entry:
-            neighbours_rev = []
+            found = False
+
             for direction, value in current.walls.items():
-                if not value:
-                    try:
-                        neighbour = self.grid.get_neighbour(current,
-                                                            direction)
-                        if current.id == neighbour.id + 1:
-                            current = neighbour
-                            neighbours_rev.append(neighbour)
-                            solution.append(direction.get_oposite())
-                    except OutOfBoundError:
-                        pass
-            # if neighbours_rev:
-            #     current = min(neighbours_rev, key=lambda box: box.id)
+                if value:
+                    continue
+                try:
+                    neighbour = self.grid.get_neighbour(current,
+                                                        direction)
+                except OutOfBoundError:
+                    continue
+
+                if current.id == neighbour.id + 1:
+                    current = neighbour
+                    solution.append(direction.get_oposite())
+                    found = True
+                    break
+
+            if not found:
+                raise RuntimeError(f"No path found from {current} to entry")
 
         return solution[::-1]

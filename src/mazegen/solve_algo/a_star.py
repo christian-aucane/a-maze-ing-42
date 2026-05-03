@@ -1,6 +1,6 @@
 from .abstract import SolvingAlgorithm
-from src.common import Direction
-from src.grid import MazeGrid, MazeBox
+from ..common import Direction
+from ..grid import MazeGrid, MazeBox
 
 
 class AStar(SolvingAlgorithm):

@@ -1,26 +1,44 @@
 from .config import parse_config_file
-from .generator.maze_generator import generate_maze
-from .solver.maze_solver import solve_maze
+from mazegen import MazeGenerator, MazeGrid, MazeBox, Direction
 from .config import Config
 from .render import AsciiRenderer
 from .colors import COLORS_WALLS, COLORS_PATTERN
-from .grid import MazeGrid, MazeBox
-from .common import Direction
 from typing import Generator
 import time
 
 
-def gen_and_solve_maze(
-    config: Config,
-) -> tuple[MazeGrid, dict[MazeBox, Direction]] | tuple[None, None]:
+def generate_maze(config: Config
+                  ) -> tuple[MazeGrid, MazeGenerator] | tuple[None, None]:
+    try:
+        generator = MazeGenerator(gen_algo_name=config.gen_algorithm,
+                                  solve_algo_name=config.solve_algorithm,
+                                  width=config.width,
+                                  height=config.height,
+                                  entry=config.entry,
+                                  exit=config.exit,
+                                  is_perfect=config.perfect)
+    except ValueError:
+        print("Error durring generator instanciation...")
+        return None, None
+
+    grid = generator.generate()
+    if grid is None:
+        print("Error durring maze generation...")
+        return None, None
+    return grid, generator
+
+
+def gen_and_solve_maze(config: Config
+                       ) -> tuple[MazeGrid, dict[
+                           MazeBox, Direction]] | tuple[None, None]:
     # Generate maze
-    maze = generate_maze(config=config)
-    if maze is None:
+    maze, generator = generate_maze(config=config)
+    if maze is None or generator is None:
         print("Error: failed to generate maze.")
         return None, None
 
     # Solve maze
-    solution = solve_maze(maze=maze, config=config)
+    solution = generator.solve(maze)
     if solution is None:
         print("Error: failed to solve maze.")
         return None, None
@@ -50,7 +68,7 @@ def itter_solution(solutions: dict[MazeBox, Direction]
 
 
 def clear_terminal() -> None:
-    print("\033[H\033[J", end="")
+    print("\033c", end="")
 
 
 def run(config_file_path: str) -> int:
@@ -71,15 +89,21 @@ def run(config_file_path: str) -> int:
     running = True
 
     while running and maze and solution:
-        print(renderer.render(maze=maze, solution=solution))
         if renderer.display_solution:
             solutions: dict[MazeBox, Direction] = {}
             for s in itter_solution(solution):
                 cell, direction = s
+                if cell.walls[direction]:
+                    print("BAD:", cell, direction, cell.walls)
+                    break
+
                 solutions[cell] = direction
                 clear_terminal()
                 print(renderer.render(maze=maze, solution=solutions))
                 time.sleep(0.2)
+        else:
+            clear_terminal()
+            print(renderer.render(maze=maze, solution=solution))
         # print(renderer.render(maze=maze, solution=solution))
         choice = input(
             "==== A_MAZE_ING ====\n"

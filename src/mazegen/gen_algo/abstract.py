@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from src.common import Direction
-from src.grid import MazeGrid, OutOfBoundError
+from ..common import Direction
+from ..grid import MazeGrid, OutOfBoundError
 
 
 class GenerationAlgorithm(ABC):

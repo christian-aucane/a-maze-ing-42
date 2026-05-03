@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from src.common import Direction
-from src.grid import MazeGrid
+from ..common import Direction
+from ..grid import MazeGrid
 
 
 class SolvingAlgorithm(ABC):
