@@ -18,8 +18,15 @@ install:
 	@echo "Copying config.txt if missing..."
 	@test -f $(CONFIG) || cp $(CONFIG_EXAMPLE) $(CONFIG)
 	$(PIP) install -e .
+	
+
+# -------------------------------
+# Install: create module mazegen, install build, execute build
+# -------------------------------
+install-build:
+	$(PIP) install build
 	$(PYTHON) -m build
-	$(PIP) install dist/mazegen-1.0.1-py3-none-any.wh
+	$(PIP) install dist/mazegen-1.0.1-py3-none-any.whl
 
 # -------------------------------
 # Run the main script inside venv
