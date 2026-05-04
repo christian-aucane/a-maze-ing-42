@@ -17,6 +17,9 @@ install:
 	$(PIP) install -r requirements.txt
 	@echo "Copying config.txt if missing..."
 	@test -f $(CONFIG) || cp $(CONFIG_EXAMPLE) $(CONFIG)
+	$(PIP) install -e .
+	$(PYTHON) -m build
+	$(PIP) install dist/mazegen-1.0.1-py3-none-any.wh
 
 # -------------------------------
 # Run the main script inside venv
