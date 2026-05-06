@@ -34,8 +34,10 @@ class Kruskal(GenerationAlgorithm):
                 continue
             for dir in [Direction.SOUTH, Direction.EAST]:
                 try:
-                    neighbour = self.grid.get_neighbour(box=cell,
-                                                        direction=dir)
+                    neighbour = self.grid.get_neighbour(
+                        box=cell,
+                        direction=dir
+                    )
                     if neighbour.is_on_ft_pattern:
                         continue
                     walls.append((cell, neighbour, dir))
@@ -45,7 +47,10 @@ class Kruskal(GenerationAlgorithm):
         random.shuffle(walls)
         for cell_a, cell_b, dir in walls:
             if self.are_connected(cell_a, cell_b):
-                continue
+                if not self.is_perfect:
+                    if random.random() <= 0.1:
+                        self.grid.break_wall(cell_a, dir)
+                    continue
             self.union(cell_a, cell_b)
             self.grid.break_wall(cell_a, dir)
 
