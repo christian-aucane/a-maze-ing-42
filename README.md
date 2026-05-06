@@ -107,7 +107,11 @@ git push origin <your-branch> --force
 Each team member must clearly indicate their contributions.
 
 ### osamet
-
+- Implemented parsing of the config.txt file to create the configuration object
+- Created terminal rendering for the maze grid and its solution
+- Added support for changing grid and pattern colors
+- Implemented the DFS-based maze generation algorithm
+- Implemented the BFS-based maze solver algorithm 
 -
 
 ### caucane
@@ -121,3 +125,126 @@ Each team member must clearly indicate their contributions.
 -
 
 > This section must be updated throughout the project to reflect actual contributions.
+## Use Module GenerateMaze
+
+The reusable maze generator is provided as a standalone Python package named `mazegen`.
+
+It exposes a main class:
+
+```python
+from mazegen import MazeGenerator
+```
+
+### Installation
+
+### From source (development)
+
+```bash
+pip install -e .
+```
+
+### From built package
+
+Build the package:
+```bash
+python3 -m build
+```
+Install the generated wheel:
+```bash
+pip install dist/mazegen-1.0.1-py3-none-any.whl
+```
+
+### Basic Usage
+
+Minimal example:
+```python
+from mazegen import MazeGenerator
+
+# Create generator
+generator = MazeGenerator(width=15, height=10)
+
+# Generate maze
+maze = generator.generate()
+```
+
+### Custom Parameters
+
+You can configure the generator using custom arguments.
+
+Example:
+```python
+from mazegen import MazeGenerator
+
+generator = MazeGenerator(
+    width=20,
+    height=15,
+    seed=42,
+    is_perfect=True
+)
+```
+### Available parameters
+
+| Parameter	| Type |	Description |
+|---------|------|--------------|
+| width | int | Maze width |
+| height | int | Maze height |
+| seed | int or None | Optional deterministic seed |
+| is_perfect | bool | Generate a perfect maze |
+
+### Access Maze Structure
+
+The generated maze returns a reusable internal structure.
+
+Example:
+```python
+maze = generator.generate()
+
+for row in maze.iterrows():
+    for cell in row:
+        print(cell.x, cell.y, cell.walls)
+```
+
+Each cell contains:
+- coordinates
+- walls
+- neighbor relations
+
+### Access Maze Solution
+
+The module also provides access to a solution path.
+
+Example:
+```python
+solution = generator.solve(maze)
+
+for cell, direction in solution.items():
+    print(f"From ({cell.x},{cell.y}) go {direction}")
+```
+Returned format:
+```python
+dict[MazeBox, Direction]
+```
+This structure gives the path from entry to exit.
+
+### Minimal Example for Evaluation
+
+```python
+from mazegen import MazeGenerator
+
+# Instantiate with size and seed
+gen = MazeGenerator(width=15, height=10, seed=42)
+
+# Generate maze
+maze = gen.generate()
+
+# Access structure
+for row in maze.iterrows():
+    for cell in row:
+        print(cell.x, cell.y, cell.walls)
+
+# Get solution
+solution = gen.solve(maze)
+
+for cell, direction in solution.items():
+    print(f"From ({cell.x},{cell.y}) go {direction}")
+```

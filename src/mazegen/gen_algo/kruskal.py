@@ -1,8 +1,8 @@
 import random
 
 from .abstract import GenerationAlgorithm
-from src.common import Direction
-from src.grid import OutOfBoundError, MazeBox, MazeGrid
+from ..common import Direction
+from ..grid import OutOfBoundError, MazeBox, MazeGrid
 
 
 class Kruskal(GenerationAlgorithm):

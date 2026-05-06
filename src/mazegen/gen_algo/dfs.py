@@ -1,9 +1,9 @@
 from .abstract import GenerationAlgorithm
-from src.common import Direction
+from ..common import Direction
 from typing import Any
 import random
 
-from src.grid import OutOfBoundError
+from ..grid import OutOfBoundError
 
 
 class DFS(GenerationAlgorithm):

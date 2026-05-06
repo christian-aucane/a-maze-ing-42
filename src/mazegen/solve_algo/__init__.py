@@ -1,6 +1,5 @@
 from .abstract import SolvingAlgorithm
-from .dfs_solver import BFS
-from .test_algo import TestSolvingAlgorithm
+from .bfs import BFS
 from .a_star import AStar
 
 """
@@ -9,7 +8,6 @@ Algo sample
 """
 
 SOLVING_ALGORITHMS_CLASSES: dict[str, type[SolvingAlgorithm]] = {
-    "test": TestSolvingAlgorithm,
     "bfs": BFS,
     "A*": AStar,
 }

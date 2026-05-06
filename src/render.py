@@ -1,6 +1,5 @@
-from .grid import MazeGrid, MazeBox
+from mazegen import MazeGrid, MazeBox, Direction
 from .colors import ColorsPattern, ColorsWalls
-from .common import Direction
 
 
 class AsciiRenderer:
