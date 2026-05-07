@@ -58,17 +58,6 @@ def write_output_file(
         )
 
 
-def itter_solution(
-    solutions: dict[MazeBox, Direction],
-) -> Generator[tuple[MazeBox, Direction], None, None]:
-    for cell, solution in solutions.items():
-        yield (cell, solution)
-
-
-def clear_terminal() -> None:
-    print("\033c", end="")
-
-
 def run(config_file_path: str) -> int:
     config = parse_config_file(config_file_path=config_file_path)
     if config is None:
@@ -87,22 +76,7 @@ def run(config_file_path: str) -> int:
     running = True
 
     while running and maze and solution:
-        if renderer.display_solution:
-            solutions: dict[MazeBox, Direction] = {}
-            for s in itter_solution(solution):
-                cell, direction = s
-                if cell.walls[direction]:
-                    print("BAD:", cell, direction, cell.walls)
-                    break
-
-                solutions[cell] = direction
-                clear_terminal()
-                print(renderer.render(maze=maze, solution=solutions))
-                time.sleep(0.2)
-        else:
-            clear_terminal()
-            print(renderer.render(maze=maze, solution=solution))
-        # print(renderer.render(maze=maze, solution=solution))
+        print(renderer.render(maze=maze, solution=solution))
         choice = input(
             "==== A_MAZE_ING ====\n"
             "1- Regenerate Maze: \n"
