@@ -7,6 +7,18 @@ from .solve_algo import SOLVING_ALGORITHMS_CLASSES, SolvingAlgorithm
 from .common import Direction
 
 
+class NameError(Exception):
+    pass
+
+
+class GenAlgoNameError(NameError):
+    pass
+
+
+class SolveAlgoNameError(NameError):
+    pass
+
+
 class MazeGenerator:
     """
     Algo sample
@@ -38,17 +50,17 @@ class MazeGenerator:
         self.is_perfect = is_perfect
         self.seed = seed
         try:
-            self.gen_algo_class = GENERATION_ALGORITHMS_CLASSES[gen_algo_name.lower()]
+            self.gen_algo_class = GENERATION_ALGORITHMS_CLASSES[gen_algo_name]
         except KeyError:
-            raise ValueError(
+            raise GenAlgoNameError(
                 f"Invalid algorithm name '{gen_algo_name}' ... Valid names: "
                 f"{GENERATION_ALGORITHMS_CLASSES.keys()}"
             )
         try:
-            self.solve_algo_class = SOLVING_ALGORITHMS_CLASSES[solve_algo_name.lower()]
+            self.solve_algo_class = SOLVING_ALGORITHMS_CLASSES[solve_algo_name]
         except KeyError:
-            raise ValueError(
-                "Invalid algorithm name ... Valid names: "
+            raise SolveAlgoNameError(
+                f"Invalid algorithm name '{solve_algo_name}' ... Valid names: "
                 f"{SOLVING_ALGORITHMS_CLASSES.keys()}"
             )
 
