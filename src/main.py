@@ -1,4 +1,4 @@
-from mazegen import MazeGenerator, MazeGrid, MazeBox, Direction
+from .mazegen import MazeGenerator, MazeGrid, MazeBox, Direction
 from .config import Config, parse_config_file
 from .render import AsciiRenderer
 from .colors import COLORS_WALLS, COLORS_PATTERN
@@ -6,16 +6,17 @@ from typing import Generator
 import time
 
 
-def generate_maze(config: Config
-                  ) -> tuple[MazeGrid, MazeGenerator] | tuple[None, None]:
+def generate_maze(config: Config) -> tuple[MazeGrid, MazeGenerator] | tuple[None, None]:
     try:
-        generator = MazeGenerator(gen_algo_name=config.gen_algorithm,
-                                  solve_algo_name=config.solve_algorithm,
-                                  width=config.width,
-                                  height=config.height,
-                                  entry=config.entry,
-                                  exit=config.exit,
-                                  is_perfect=config.perfect)
+        generator = MazeGenerator(
+            gen_algo_name=config.gen_algorithm,
+            solve_algo_name=config.solve_algorithm,
+            width=config.width,
+            height=config.height,
+            entry=config.entry,
+            exit=config.exit,
+            is_perfect=config.perfect,
+        )
     except ValueError:
         print("Error durring generator instanciation...")
         return None, None
@@ -27,9 +28,9 @@ def generate_maze(config: Config
     return grid, generator
 
 
-def gen_and_solve_maze(config: Config
-                       ) -> tuple[MazeGrid, dict[
-                           MazeBox, Direction]] | tuple[None, None]:
+def gen_and_solve_maze(
+    config: Config,
+) -> tuple[MazeGrid, dict[MazeBox, Direction]] | tuple[None, None]:
     # Generate maze
     maze, generator = generate_maze(config=config)
     if maze is None or generator is None:
@@ -48,10 +49,7 @@ def gen_and_solve_maze(config: Config
 def write_output_file(
     config: Config, maze: MazeGrid, solution: dict[MazeBox, Direction]
 ) -> None:
-    solution_str = ''.join(
-        direction.get_output()
-        for direction in solution.values()
-    )
+    solution_str = "".join(direction.get_output() for direction in solution.values())
     with open(config.output_file, "w") as f:
         f.write(
             f"{maze.get_output()}\n\n"
@@ -60,8 +58,9 @@ def write_output_file(
         )
 
 
-def itter_solution(solutions: dict[MazeBox, Direction]
-                   ) -> Generator[tuple[MazeBox, Direction], None, None]:
+def itter_solution(
+    solutions: dict[MazeBox, Direction],
+) -> Generator[tuple[MazeBox, Direction], None, None]:
     for cell, solution in solutions.items():
         yield (cell, solution)
 

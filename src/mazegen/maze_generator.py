@@ -20,15 +20,17 @@ class MazeGenerator:
     solve_algo_class: type[SolvingAlgorithm]
 
     # TODO: separer l'algo et faire de la composition ?
-    def __init__(self, width: int,
-                 height: int,
-                 seed: int | None = None,
-                 is_perfect: bool = False,
-                 entry: tuple[int, int] = (0, 0),
-                 exit: tuple[int, int] | None = None,
-                 gen_algo_name: str = "dfs",
-                 solve_algo_name: str = "BFS") -> None:
-
+    def __init__(
+        self,
+        width: int,
+        height: int,
+        seed: int | None = None,
+        is_perfect: bool = False,
+        entry: tuple[int, int] = (0, 0),
+        exit: tuple[int, int] | None = None,
+        gen_algo_name: str = "dfs",
+        solve_algo_name: str = "BFS",
+    ) -> None:
         self.width = width
         self.height = height
         self.entry = entry
@@ -36,24 +38,23 @@ class MazeGenerator:
         self.is_perfect = is_perfect
         self.seed = seed
         try:
-            self.gen_algo_class = GENERATION_ALGORITHMS_CLASSES[
-                gen_algo_name.lower()]
+            self.gen_algo_class = GENERATION_ALGORITHMS_CLASSES[gen_algo_name.lower()]
         except KeyError:
             raise ValueError(
                 f"Invalid algorithm name '{gen_algo_name}' ... Valid names: "
                 f"{GENERATION_ALGORITHMS_CLASSES.keys()}"
             )
         try:
-            self.solve_algo_class = SOLVING_ALGORITHMS_CLASSES[
-                solve_algo_name.lower()]
+            self.solve_algo_class = SOLVING_ALGORITHMS_CLASSES[solve_algo_name.lower()]
         except KeyError:
             raise ValueError(
                 "Invalid algorithm name ... Valid names: "
                 f"{SOLVING_ALGORITHMS_CLASSES.keys()}"
             )
 
-    def get_exit(self, exit: tuple[int, int] | None, width: int,
-                 height: int) -> tuple[int, int]:
+    def get_exit(
+        self, exit: tuple[int, int] | None, width: int, height: int
+    ) -> tuple[int, int]:
         if not exit:
             return (width - 1, height - 1)
         return exit
@@ -69,9 +70,9 @@ class MazeGenerator:
 
     # solve methode
     @staticmethod
-    def _get_solution_dict(grid: MazeGrid,
-                           solution: list[Direction]
-                           ) -> dict[MazeBox, Direction]:
+    def _get_solution_dict(
+        grid: MazeGrid, solution: list[Direction]
+    ) -> dict[MazeBox, Direction]:
         # TODO: catch OutOfBoundError ??
         output = {}
         current = grid.entry

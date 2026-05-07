@@ -1,4 +1,4 @@
-from mazegen import MazeGrid, MazeBox, Direction
+from .mazegen import MazeGrid, MazeBox, Direction
 from .colors import ColorsPattern, ColorsWalls
 
 
@@ -45,18 +45,11 @@ class AsciiRenderer:
         elif cell.is_exit:
             return f"{self.walls_color}{wall_left} - {self.END_COLOR}"
         elif self.display_solution and solution_dir is not None:
-            return (
-                f"{self.walls_color}{wall_left}"
-                f"{self.END_COLOR} {solution_dir} "
-            )
+            return f"{self.walls_color}{wall_left}{self.END_COLOR} {solution_dir} "
         else:
             return f"{self.walls_color}{wall_left}   {self.END_COLOR}"
 
-    def render(
-        self,
-        maze: MazeGrid,
-        solution: dict[MazeBox, Direction]
-    ) -> str:
+    def render(self, maze: MazeGrid, solution: dict[MazeBox, Direction]) -> str:
         output_lst: list[str] = []
         for row in maze.iterrows():
             output_lst.append(
@@ -66,9 +59,7 @@ class AsciiRenderer:
 
             output_lst.append(
                 "".join(
-                    self._get_cell_center(
-                        cell=cell, solution_dir=solution.get(cell)
-                    )
+                    self._get_cell_center(cell=cell, solution_dir=solution.get(cell))
                     for cell in row
                 )
                 + f"{self.walls_color}|{self.END_COLOR}"
